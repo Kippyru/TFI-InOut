@@ -9,4 +9,8 @@ user: root
 pass: 1234  
 port: 27017
 
-y si no... nuc
+y si no...
+
+To do
+AGREGAR Validaciones
+AGREGAR Autentificador de token

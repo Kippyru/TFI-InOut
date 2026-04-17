@@ -15,3 +15,15 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MariaDBDialect
     show-sql: true
+
+logging:
+  level:
+    root: INFO
+    com.kevin.microservices: WARN
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+    file: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+  file:
+    name: logs/backend.log
+    max-size: 10MB
+    max-history: 30

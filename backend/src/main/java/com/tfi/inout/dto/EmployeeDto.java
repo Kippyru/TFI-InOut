@@ -18,4 +18,5 @@ public class EmployeeDto {
     private String dni;
     private String state;
     private LocalDate dateEntry;
+    private Long user;
 }

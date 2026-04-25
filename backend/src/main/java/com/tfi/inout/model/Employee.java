@@ -37,5 +37,9 @@ public class Employee {
     @Column(name = "date_entry")
     private LocalDate dateEntry;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
 
 }

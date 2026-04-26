@@ -19,7 +19,7 @@ spring:
 logging:
   level:
     root: INFO
-    com.kevin.microservices: WARN
+    com.tfi.inout: WARN
   pattern:
     console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
     file: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'

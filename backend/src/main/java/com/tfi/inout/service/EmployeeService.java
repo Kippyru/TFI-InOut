@@ -2,8 +2,14 @@ package com.tfi.inout.service;
 
 import com.tfi.inout.dto.EmployeeDto;
 import com.tfi.inout.mapper.EmployeeMapper;
+import com.tfi.inout.mapper.UserMapper;
 import com.tfi.inout.model.Employee;
+import com.tfi.inout.model.Role;
+import com.tfi.inout.model.User;
 import com.tfi.inout.repository.EmployeeRepository;
+import com.tfi.inout.repository.RoleRepository;
+import com.tfi.inout.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +21,29 @@ public class EmployeeService {
     private EmployeeRepository employeeRepository;
     @Autowired
     private EmployeeMapper employeeMapper;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
-    public void createEmployee(EmployeeDto  employeeDto) {
+    @Transactional
+    public EmployeeDto createEmployee(EmployeeDto employeeDto) {
+        Role role = roleRepository.findById(2L)
+                .orElseThrow(() -> new RuntimeException("Rol not found"));
+
+        User user = new User();
+        user.setUsername(employeeDto.getNumberEmployee());
+        user.setPassword(employeeDto.getDni());
+        user.setRole(role);
+        user.setState("Activo");
+
+        user = userRepository.save(user);
+
         Employee employee = employeeMapper.toEntity(employeeDto);
-        employeeRepository.save(employee);
+        employee.setUser(user);
+        employee = employeeRepository.save(employee);
+
+        return employeeMapper.toDto(employee);
     }
 
     public List<EmployeeDto> list() {

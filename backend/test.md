@@ -43,9 +43,40 @@ BODY:
 "dni": "12345678"
 }  
 
+**TEST SCHEDULES**  
+POST  
+localhost:8080/api/schedules  
+BODY:  
+{
+"name": "Mañana",
+"state": "Activo",
+"hourWork": 8,
+"checkInTolerance": 15,
+"checkOutTolerance": 15
+}  
+
+POST  
+localhost:8080/api/schedules/1/details  
+BODY:  
+{
+"day": "LUNES",
+"checkIn": "08:00:00",
+"checkOut": "16:00:00"
+}  
+
+POST  
+localhost:8080/api/schedules/assign  
+BODY:  
+{
+"employeeId": 1,
+"scheduleId": 1,
+"startDate": "2026-05-17",
+"endDate": "2026-06-25"
+}
+
 **TEST EVENTATTENDANCE**  
 POST  
-localhost:8080/api/attendance/1?device=PC-ADMIN  
+localhost:8080/api/attendance/1?device=PC-ADMIN
 
-Si no hay eventos hace un CHECK_IN  
-Si encuentra que el último evento es CHECK_IN, entonces hace un CHECK_OUT
+Antes: se alternaba CHECK_IN/CHECK_OUT nomás
+Ahora: se compara contra horario esperado  

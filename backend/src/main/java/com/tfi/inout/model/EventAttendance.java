@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
@@ -25,6 +26,9 @@ public class EventAttendance {
 
     @Column(name = "hour")
     private LocalTime hour;
+
+    @Column(name = "date")
+    private LocalDate date;
 
     @Column(name = "device", length = 100)
     private String device;

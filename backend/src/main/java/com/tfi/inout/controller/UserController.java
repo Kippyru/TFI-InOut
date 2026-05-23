@@ -5,6 +5,7 @@ import com.tfi.inout.dto.UserDto;
 import com.tfi.inout.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<String> createUser(@Valid @RequestBody UserDto userDto) {
         userService.createUser(userDto);
         return ResponseEntity.ok("User successfully created");
     }
@@ -33,7 +34,7 @@ public class UserController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateUser(@PathVariable Long id,
-                                             @RequestBody UserDto userDto) {
+                                             @Valid @RequestBody UserDto userDto) {
         userService.edit(id, userDto);
         return ResponseEntity.ok("User successfully updated");
     }

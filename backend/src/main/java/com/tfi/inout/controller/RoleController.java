@@ -4,6 +4,7 @@ import com.tfi.inout.dto.RoleDto;
 import com.tfi.inout.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class RoleController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateRole(@PathVariable Long id,
-                                                 @RequestBody RoleDto roleDto) {
+                                                 @Valid @RequestBody RoleDto roleDto) {
         roleService.edit(id, roleDto);
         return ResponseEntity.ok("Role successfully updated");
     }

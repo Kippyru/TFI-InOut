@@ -4,6 +4,7 @@ import com.tfi.inout.dto.EmployeeDto;
 import com.tfi.inout.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class EmployeeController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateEmployee(@PathVariable Long id,
-                                                 @RequestBody EmployeeDto employeeDto) {
+                                                 @Valid @RequestBody EmployeeDto employeeDto) {
         employeeService.edit(id, employeeDto);
         return ResponseEntity.ok("Employee successfully updated");
     }

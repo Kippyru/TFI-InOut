@@ -4,6 +4,7 @@ import com.tfi.inout.dto.UserDto;
 import com.tfi.inout.mapper.UserMapper;
 import com.tfi.inout.model.User;
 import com.tfi.inout.repository.UserRepository;
+import com.tfi.inout.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,13 +29,13 @@ public class UserService {
 
     public UserDto listId(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return userMapper.toDto(user);
     }
 
     public UserDto edit(Long id, UserDto userDto) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         userMapper.updateUser(userDto, user);
         User updateUser = userRepository.save(user);
         return userMapper.toDto(updateUser);
@@ -42,7 +43,7 @@ public class UserService {
 
     public void delete(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new RuntimeException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
         userRepository.deleteById(id);
     }

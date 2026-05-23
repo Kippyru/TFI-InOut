@@ -8,6 +8,7 @@ import com.tfi.inout.model.Schedule;
 import com.tfi.inout.model.DetailSchedule;
 import com.tfi.inout.repository.ScheduleRepository;
 import com.tfi.inout.repository.DetailScheduleRepository;
+import com.tfi.inout.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,7 @@ public class ScheduleService {
     @Transactional
     public DetailScheduleDto addDetailToSchedule(Long scheduleId, DetailScheduleDto detailDto) {
         Schedule schedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new RuntimeException("Schedule not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Schedule not found"));
         detailDto.setScheduleId(scheduleId);
         DetailSchedule detail = detailScheduleMapper.toEntity(detailDto);
         return detailScheduleMapper.toDto(detailScheduleRepository.save(detail));

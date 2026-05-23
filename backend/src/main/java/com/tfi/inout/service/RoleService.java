@@ -4,6 +4,7 @@ import com.tfi.inout.dto.RoleDto;
 import com.tfi.inout.mapper.RoleMapper;
 import com.tfi.inout.model.Role;
 import com.tfi.inout.repository.RoleRepository;
+import com.tfi.inout.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,13 +29,13 @@ public class RoleService {
 
     public RoleDto listId(Long id) {
         Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
         return roleMapper.toDto(role);
     }
 
     public RoleDto edit(Long id, RoleDto roleDto) {
         Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
         roleMapper.updateRole(roleDto, role);
         Role updateRole = roleRepository.save(role);
         return roleMapper.toDto(updateRole);
@@ -42,7 +43,7 @@ public class RoleService {
 
     public void delete(Long id) {
         if (!roleRepository.existsById(id)) {
-            throw new RuntimeException("Role not found");
+            throw new ResourceNotFoundException("Role not found");
         }
         roleRepository.deleteById(id);
     }

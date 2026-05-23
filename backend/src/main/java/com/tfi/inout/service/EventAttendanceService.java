@@ -10,6 +10,8 @@ import com.tfi.inout.repository.DetailScheduleRepository;
 import com.tfi.inout.repository.EmployeeRepository;
 import com.tfi.inout.repository.EventAttendanceRepository;
 import com.tfi.inout.repository.ScheduleEmployeeRepository;
+import com.tfi.inout.exception.ResourceNotFoundException;
+import com.tfi.inout.exception.BusinessException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,7 @@ public class EventAttendanceService {
     @Transactional
     public EventAttendanceDto registerAttendance(Long employeeId, String device) {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
 
         LocalDate today = LocalDate.now();
         LocalTime now = LocalTime.now();
@@ -41,7 +43,7 @@ public class EventAttendanceService {
 
         Optional<EventAttendance> existingEvent = repository.findByEmployeeIdAndDateAndEventType(employeeId, today, nextEvent);
         if (existingEvent.isPresent()) {
-            throw new RuntimeException("Already checked " + (nextEvent.equals("CHECK_IN") ? "in" : "out") + " for today");
+            throw new BusinessException("Already checked " + (nextEvent.equals("CHECK_IN") ? "in" : "out") + " for today");
         }
 
         EventAttendance attendance = new EventAttendance();

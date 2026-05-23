@@ -1,6 +1,7 @@
 package com.tfi.inout.service;
 
 import com.tfi.inout.dto.EmployeeDto;
+import com.tfi.inout.exception.ResourceNotFoundException;
 import com.tfi.inout.mapper.EmployeeMapper;
 import com.tfi.inout.mapper.UserMapper;
 import com.tfi.inout.model.Employee;
@@ -29,7 +30,7 @@ public class EmployeeService {
     @Transactional
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
         Role role = roleRepository.findById(2L)
-                .orElseThrow(() -> new RuntimeException("Rol not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Rol not found"));
 
         User user = new User();
         user.setUsername(employeeDto.getNumberEmployee());
@@ -53,13 +54,13 @@ public class EmployeeService {
 
     public EmployeeDto listId(Long id) {
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
         return employeeMapper.toDto(employee);
     }
 
     public EmployeeDto edit(Long id, EmployeeDto employeeDto) {
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
         employeeMapper.updateEmployee(employeeDto, employee);
         Employee updatedEmployee = employeeRepository.save(employee);
         return employeeMapper.toDto(updatedEmployee);
@@ -67,7 +68,7 @@ public class EmployeeService {
 
     public void delete(Long id) {
         if (!employeeRepository.existsById(id)) {
-            throw new RuntimeException("Employee not found");
+            throw new ResourceNotFoundException("Employee not found");
         }
         employeeRepository.deleteById(id);
     }

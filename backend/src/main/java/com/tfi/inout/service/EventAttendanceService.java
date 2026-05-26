@@ -10,8 +10,8 @@ import com.tfi.inout.repository.DetailScheduleRepository;
 import com.tfi.inout.repository.EmployeeRepository;
 import com.tfi.inout.repository.EventAttendanceRepository;
 import com.tfi.inout.repository.ScheduleEmployeeRepository;
-import com.tfi.inout.exception.ResourceNotFoundException;
-import com.tfi.inout.exception.BusinessException;
+import com.tfi.inout.handler.ResourceNotFoundException;
+import com.tfi.inout.handler.BusinessException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -85,4 +85,4 @@ public class EventAttendanceService {
         }
         return lastEventOpt.get().getEventType().equals("CHECK_IN") ? "CHECK_OUT" : "CHECK_IN";
     }
-}
+}

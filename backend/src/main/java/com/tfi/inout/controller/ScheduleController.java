@@ -29,6 +29,12 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.listSchedules());
     }
 
+    @PutMapping("/restore/{id}")
+    public ResponseEntity<String> restoreSchedule(@PathVariable Long id) {
+        scheduleService.restore(id);
+        return ResponseEntity.ok("Schedule successfully restored");
+    }
+
     @PostMapping("/{id}/details")
     public ResponseEntity<DetailScheduleDto> addDetail(@PathVariable Long id, @Valid @RequestBody DetailScheduleDto dto) {
         return ResponseEntity.ok(scheduleService.addDetailToSchedule(id, dto));

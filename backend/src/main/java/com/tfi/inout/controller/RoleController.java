@@ -38,6 +38,12 @@ public class RoleController {
         return ResponseEntity.ok("Role successfully updated");
     }
 
+    @PutMapping("/restore/{id}")
+    public ResponseEntity<String> restoreRole(@PathVariable Long id) {
+        roleService.restore(id);
+        return ResponseEntity.ok("Role successfully restored");
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteRole(@PathVariable Long id) {
         roleService.delete(id);

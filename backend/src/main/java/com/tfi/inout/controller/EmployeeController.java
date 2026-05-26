@@ -38,6 +38,12 @@ public class EmployeeController {
         return ResponseEntity.ok("Employee successfully updated");
     }
 
+    @PutMapping("/restore/{id}")
+    public ResponseEntity<String> restoreEmployee(@PathVariable Long id) {
+        employeeService.restore(id);
+        return ResponseEntity.ok("Employee successfully restored");
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteEmployee(@PathVariable Long id) {
         employeeService.delete(id);

@@ -1,7 +1,5 @@
 package com.tfi.inout.handler;
 
-import com.tfi.inout.exception.BusinessException;
-import com.tfi.inout.exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

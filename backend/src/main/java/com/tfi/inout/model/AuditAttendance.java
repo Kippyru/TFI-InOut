@@ -9,18 +9,18 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "audit_attendance")
-public class AuditAttendance {
+@Table(name = "audit_attendance", indexes = @Index(columnList = "active"))
+public class AuditAttendance extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_attendance_id")
     private EventAttendance event_attendance;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "admin_id")
     private User admin;
 

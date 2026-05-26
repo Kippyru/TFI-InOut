@@ -9,14 +9,14 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "detail_schedule")
-public class DetailSchedule {
+@Table(name = "detail_schedule", indexes = @Index(columnList = "active"))
+public class DetailSchedule extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 

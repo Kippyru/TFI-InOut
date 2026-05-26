@@ -10,14 +10,14 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "event_attendance")
-public class EventAttendance {
+@Table(name = "event_attendance", indexes = @Index(columnList = "active"))
+public class EventAttendance extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employee_id")
     private Employee employee;
 

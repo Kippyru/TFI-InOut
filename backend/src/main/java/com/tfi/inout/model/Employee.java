@@ -9,8 +9,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "employee")
-public class Employee {
+@Table(name = "employee", indexes = @Index(columnList = "active"))
+public class Employee extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -37,7 +37,7 @@ public class Employee {
     @Column(name = "date_entry")
     private LocalDate dateEntry;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 

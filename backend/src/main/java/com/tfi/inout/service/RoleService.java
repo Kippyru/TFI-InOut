@@ -4,9 +4,10 @@ import com.tfi.inout.dto.RoleDto;
 import com.tfi.inout.mapper.RoleMapper;
 import com.tfi.inout.model.Role;
 import com.tfi.inout.repository.RoleRepository;
-import com.tfi.inout.exception.ResourceNotFoundException;
+import com.tfi.inout.handler.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,6 +40,11 @@ public class RoleService {
         roleMapper.updateRole(roleDto, role);
         Role updateRole = roleRepository.save(role);
         return roleMapper.toDto(updateRole);
+    }
+
+    @Transactional
+    public void restore(Long id) {
+        roleRepository.restoreById(id);
     }
 
     public void delete(Long id) {

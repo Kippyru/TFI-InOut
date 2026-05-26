@@ -8,7 +8,7 @@ import com.tfi.inout.model.Schedule;
 import com.tfi.inout.model.DetailSchedule;
 import com.tfi.inout.repository.ScheduleRepository;
 import com.tfi.inout.repository.DetailScheduleRepository;
-import com.tfi.inout.exception.ResourceNotFoundException;
+import com.tfi.inout.handler.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +28,11 @@ public class ScheduleService {
     public ScheduleDto createSchedule(ScheduleDto scheduleDto) {
         Schedule schedule = scheduleMapper.toEntity(scheduleDto);
         return scheduleMapper.toDto(scheduleRepository.save(schedule));
+    }
+
+    @Transactional
+    public void restore(Long id) {
+        scheduleRepository.restoreById(id);
     }
 
     public List<ScheduleDto> listSchedules() {

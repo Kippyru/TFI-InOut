@@ -4,9 +4,10 @@ import com.tfi.inout.dto.UserDto;
 import com.tfi.inout.mapper.UserMapper;
 import com.tfi.inout.model.User;
 import com.tfi.inout.repository.UserRepository;
-import com.tfi.inout.exception.ResourceNotFoundException;
+import com.tfi.inout.handler.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,6 +40,11 @@ public class UserService {
         userMapper.updateUser(userDto, user);
         User updateUser = userRepository.save(user);
         return userMapper.toDto(updateUser);
+    }
+
+    @Transactional
+    public void restore(Long id) {
+        userRepository.restoreById(id);
     }
 
     public void delete(Long id) {

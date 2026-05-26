@@ -1,18 +1,17 @@
 package com.tfi.inout.service;
 
 import com.tfi.inout.dto.EmployeeDto;
-import com.tfi.inout.exception.ResourceNotFoundException;
+import com.tfi.inout.handler.ResourceNotFoundException;
 import com.tfi.inout.mapper.EmployeeMapper;
-import com.tfi.inout.mapper.UserMapper;
 import com.tfi.inout.model.Employee;
 import com.tfi.inout.model.Role;
 import com.tfi.inout.model.User;
 import com.tfi.inout.repository.EmployeeRepository;
 import com.tfi.inout.repository.RoleRepository;
 import com.tfi.inout.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -64,6 +63,11 @@ public class EmployeeService {
         employeeMapper.updateEmployee(employeeDto, employee);
         Employee updatedEmployee = employeeRepository.save(employee);
         return employeeMapper.toDto(updatedEmployee);
+    }
+
+    @Transactional
+    public void restore(Long id) {
+        employeeRepository.restoreById(id);
     }
 
     public void delete(Long id) {

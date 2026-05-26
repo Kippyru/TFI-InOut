@@ -1,6 +1,5 @@
 package com.tfi.inout.controller;
 
-import com.tfi.inout.dto.EmployeeDto;
 import com.tfi.inout.dto.UserDto;
 import com.tfi.inout.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

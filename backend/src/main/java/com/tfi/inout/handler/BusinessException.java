@@ -1,4 +1,4 @@
-package com.tfi.inout.exception;
+package com.tfi.inout.handler;
 
 public class BusinessException extends RuntimeException {
     public BusinessException(String message) {

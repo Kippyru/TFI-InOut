@@ -12,6 +12,7 @@ import com.tfi.inout.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -25,6 +26,8 @@ public class EmployeeService {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Transactional
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
@@ -33,7 +36,7 @@ public class EmployeeService {
 
         User user = new User();
         user.setUsername(employeeDto.getNumberEmployee());
-        user.setPassword(employeeDto.getDni());
+        user.setPassword(passwordEncoder.encode(employeeDto.getDni()));
         user.setRole(role);
         user.setState("Activo");
 

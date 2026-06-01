@@ -8,6 +8,7 @@ import com.tfi.inout.handler.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -17,9 +18,12 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public void createUser(UserDto userDto) {
         User user = userMapper.toEntity(userDto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -38,6 +42,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         userMapper.updateUser(userDto, user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User updateUser = userRepository.save(user);
         return userMapper.toDto(updateUser);
     }

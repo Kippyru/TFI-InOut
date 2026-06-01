@@ -12,4 +12,6 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     @Modifying
     @Query(value = "UPDATE role SET active = true WHERE id = :id", nativeQuery = true)
     void restoreById(@Param("id") Long id);
+
+    java.util.Optional<Role> findByName(String name);
 }

@@ -1,4 +1,23 @@
-Aca pongo los test a los endpoints que hice:  
+Aca pongo los test a los endpoints que hice:
+
+**Ahora hay JWT**  
+Antes de hacer cualquier petición, debes iniciar sesión para obtener el token.
+
+**1. LOGIN**  
+POST localhost:8080/api/auth/login  
+BODY:  
+{
+  "username": "admin",
+  "password": "1234"
+}
+
+Respuesta:
+{
+  "token": "token>:3"
+}
+
+Copiar ese token y usarlo en los demás endpoints de esta forma:  
+`Header -> Authorization: Bearer token>:3`  
 
 **TEST a ROLE**  
 POST  
@@ -13,7 +32,7 @@ BODY:
 }
 
 GET  
-localhost:8080/api/roles/list  
+localhost:8080/api/roles/list
 
 
 **TEST USER**  
@@ -25,10 +44,10 @@ BODY:
 "password": "1234",
 "role": "1",
 "state": "Activo"
-}  
+}
 
 GET  
-localhost:8080/api/users/list  
+localhost:8080/api/users/list
 
 **TEST EMPLOYEE**  
 POST  
@@ -41,7 +60,7 @@ BODY:
 "numberEmployee": "1234",
 "cuil": "20123456784",
 "dni": "12345678"
-}  
+}
 
 **TEST SCHEDULES**  
 POST  
@@ -53,7 +72,7 @@ BODY:
 "hourWork": 8,
 "checkInTolerance": 15,
 "checkOutTolerance": 15
-}  
+}
 
 POST  
 localhost:8080/api/schedules/1/details  
@@ -62,7 +81,7 @@ BODY:
 "day": "LUNES",
 "checkIn": "08:00:00",
 "checkOut": "16:00:00"
-}  
+}
 
 POST  
 localhost:8080/api/schedules/assign  
@@ -78,5 +97,11 @@ BODY:
 POST  
 localhost:8080/api/attendance/1?device=PC-ADMIN
 
-Antes: se alternaba CHECK_IN/CHECK_OUT nomás
+Antes: se alternaba CHECK_IN/CHECK_OUT nomás  
 Ahora: se compara contra horario esperado  
+
+**TEST AUDIT ATTENDANCE**  
+POST  
+/localhost:8080/api/admin/attendance/audit?adminId=1&eventAttendanceId=6&reason=CorreccionHorario&newValue=03:00:00  
+
+hay que tener cuidado con el value, solo admite con el formato 00:00:00

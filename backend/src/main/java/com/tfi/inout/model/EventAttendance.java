@@ -3,6 +3,7 @@ package com.tfi.inout.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,13 +12,14 @@ import java.time.LocalTime;
 @Setter
 @Entity
 @Table(name = "event_attendance", indexes = @Index(columnList = "active"))
+@SQLRestriction("active = true")
 public class EventAttendance extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id")
     private Employee employee;
 

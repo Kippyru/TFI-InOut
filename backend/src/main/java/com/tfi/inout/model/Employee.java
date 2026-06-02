@@ -3,13 +3,15 @@ package com.tfi.inout.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLRestriction;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "employee", indexes = @Index(columnList = "active"))
+@SQLRestriction("active = true")
 public class Employee extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +37,9 @@ public class Employee extends BaseEntity {
     private String state;
 
     @Column(name = "date_entry")
-    private LocalDate dateEntry;
+    private LocalDateTime dateEntry;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

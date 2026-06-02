@@ -3,6 +3,7 @@ package com.tfi.inout.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.Instant;
 
@@ -10,17 +11,18 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "audit_attendance", indexes = @Index(columnList = "active"))
+@SQLRestriction("active = true")
 public class AuditAttendance extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_attendance_id")
     private EventAttendance event_attendance;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id")
     private User admin;
 

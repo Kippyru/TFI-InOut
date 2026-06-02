@@ -42,5 +42,12 @@ por ejepmlo para los roles: localhost:8080/api/roles/restore/1
 Agregue el audit, jwt y encriptacion a las passwords, lo ultimo hizo que las passwords ya existentes dejen de andar, aprovechando eso hice
 que automaticamente se cree un admin y los roles cuando levantas la app
 
+- 02062026  
+Refactorice el softdelete, ahora permite usar LAZY... Excepto en user -> rol. Eso si o si EAGER porq
+Spring Security necesita el rol constantemente. Ademas no deberia dar problemas porq rol es un objeto chico y el usuario
+tiene un unico rol
+
+
+
 
 

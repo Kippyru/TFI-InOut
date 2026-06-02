@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Academic Curator | Simple Dashboard</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside>
+        <div class="sidebar-brand">Hola Rodo!</div>
+        <nav>
+            <ul>
+                <li>
+                    <a class="active" href="/dashboard">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="login">
+                        <span class="material-symbols-outlined">tactic</span>
+                        Login
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    <!-- Main Content Wrapper -->
+    <div class="wrapper">
+        <header>
+            <h1>Overview</h1>
+            <div class="header-actions">
+                <button (click)="logout()">
+                    Logout
+                </button>
+            </div>
+        </header>
+        <main>
+            <!-- Stats Row -->
+            <section class="stats-grid">
+                <div class="card">
+                    <h3>Proyectos</h3>
+                    <div class="value">05</div>
+                </div>
+                <div class="card">
+                    <h3>Tareas</h3>
+                    <div class="value">12</div>
+                </div>
+                <div class="card">
+                    <h3>Finalizados</h3>
+                    <div class="value">95%</div>
+                </div>
+            </section>
+            <!-- Activity Section -->
+            <section class="activity-section">
+                <h2>Recent Activity</h2>
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <div class="activity-info">
+                            <p>Mapping para Login</p>
+                            <span>Updated 2 hours ago</span>
+                        </div>
+                        <span class="status">In Progress</span>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-info">
+                            <p>Models de Usuario</p>
+                            <span>Completed yesterday</span>
+                        </div>
+                        <span class="status">Done</span>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-info">
+                            <p>TFI Reunion</p>
+                            <span>Created 3 days ago</span>
+                        </div>
+                        <span class="status">Review</span>
+                    </li>
+                </ul>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>

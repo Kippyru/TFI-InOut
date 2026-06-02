@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Login</title>
+</head>
+
+<body>
+    <div style="width:300px; margin:auto; margin-top:100px;">
+
+        <h2>Login</h2>
+
+        <input type="text" placeholder="Usuario" [(ngModel)]="username" />
+
+        <br><br>
+
+        <input type="password" placeholder="Password" [(ngModel)]="password" />
+
+        <br><br>
+
+        <button (click)="login()">
+            Ingresar
+        </button>
+
+        <br><br>
+
+        <p style="color:red">
+            {{ errorMessage }}
+        </p>
+
+    </div>
+
+</body>
+
+</html>

@@ -45,4 +45,10 @@ public class ScheduleController {
     public ResponseEntity<ScheduleEmployeeDto> assignSchedule(@Valid @RequestBody ScheduleEmployeeDto dto) {
         return ResponseEntity.ok(scheduleEmployeeService.assignSchedule(dto));
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteSchedule(@PathVariable Long id) {
+        scheduleService.delete(id);
+        return ResponseEntity.ok("Schedule successfully deleted");
+    }
 }

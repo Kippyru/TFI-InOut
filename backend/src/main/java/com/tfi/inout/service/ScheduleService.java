@@ -4,6 +4,7 @@ import com.tfi.inout.dto.ScheduleDto;
 import com.tfi.inout.dto.DetailScheduleDto;
 import com.tfi.inout.mapper.ScheduleMapper;
 import com.tfi.inout.mapper.DetailScheduleMapper;
+import com.tfi.inout.model.Employee;
 import com.tfi.inout.model.Schedule;
 import com.tfi.inout.model.DetailSchedule;
 import com.tfi.inout.repository.ScheduleRepository;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,5 +48,16 @@ public class ScheduleService {
         detailDto.setScheduleId(scheduleId);
         DetailSchedule detail = detailScheduleMapper.toEntity(detailDto);
         return detailScheduleMapper.toDto(detailScheduleRepository.save(detail));
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Schedule not found"));
+
+        schedule.setActive(false);
+        schedule.setDeletedAt(LocalDateTime.now());
+
+        scheduleRepository.save(schedule);
     }
 }

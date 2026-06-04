@@ -4,12 +4,16 @@ import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.SoftDelete;
-import org.hibernate.annotations.SoftDeleteType;
+
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Getter
 @Setter
-@SoftDelete(columnName = "active", strategy = SoftDeleteType.ACTIVE)
 public abstract class BaseEntity {
+    @Column(name = "active", nullable = false)
+    private Boolean active = true;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 }

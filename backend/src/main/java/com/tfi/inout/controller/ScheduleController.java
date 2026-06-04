@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/schedules")
 @RequiredArgsConstructor
@@ -43,5 +44,11 @@ public class ScheduleController {
     @PostMapping("/assign")
     public ResponseEntity<ScheduleEmployeeDto> assignSchedule(@Valid @RequestBody ScheduleEmployeeDto dto) {
         return ResponseEntity.ok(scheduleEmployeeService.assignSchedule(dto));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteSchedule(@PathVariable Long id) {
+        scheduleService.delete(id);
+        return ResponseEntity.ok("Schedule successfully deleted");
     }
 }

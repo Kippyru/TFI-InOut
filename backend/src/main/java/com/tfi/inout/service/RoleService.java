@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -47,10 +48,14 @@ public class RoleService {
         roleRepository.restoreById(id);
     }
 
+    @Transactional
     public void delete(Long id) {
-        if (!roleRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Role not found");
-        }
-        roleRepository.deleteById(id);
+        Role role = roleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+
+        role.setActive(false);
+        role.setDeletedAt(LocalDateTime.now());
+
+        roleRepository.save(role);
     }
 }

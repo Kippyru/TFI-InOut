@@ -14,6 +14,10 @@ export const dashboardRoutes: Routes = [
                 title: 'Home',
             },
             {
+                path: 'employee',
+                loadChildren: () => import('./employee/employee.routes').then(m => m.employeeRoutes)
+            },
+            {
                 path: '**',
                 pathMatch: 'full',
                 redirectTo: 'home',

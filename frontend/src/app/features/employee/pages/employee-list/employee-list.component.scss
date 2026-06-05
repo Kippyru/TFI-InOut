@@ -1,0 +1,33 @@
+.employee-list-container {
+  padding: 20px;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h2 {
+      margin: 0;
+      color: #333;
+    }
+  }
+
+  .employee-table {
+    width: 100%;
+
+    .active {
+      color: green;
+      font-weight: bold;
+    }
+
+    .inactive {
+      color: red;
+      font-weight: bold;
+    }
+
+    .restore-btn {
+      color: #4caf50;
+    }
+  }
+}

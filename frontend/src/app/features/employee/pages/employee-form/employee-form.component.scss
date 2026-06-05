@@ -1,0 +1,53 @@
+.form-container {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+
+  .form-card {
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+    
+    mat-card-header {
+      margin-bottom: 20px;
+      
+      mat-card-title {
+        font-size: 24px;
+        color: #333;
+      }
+    }
+  }
+
+  .employee-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .form-row {
+      display: flex;
+      gap: 16px;
+      
+      .full-width {
+        flex: 1;
+        width: 100%;
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .employee-form {
+    .form-row {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+}

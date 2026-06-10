@@ -5,22 +5,29 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { FormsModule } from '@angular/forms';
 import { EmployeeService } from '../../services/employee.service';
+import { UserService } from '../../../../core/services/user.service';
 import { Employee } from '../../models/employee.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatTableModule, MatButtonModule, MatIconModule, MatSnackBarModule],
+  imports: [CommonModule, RouterModule, MatTableModule, MatButtonModule, MatIconModule, MatSnackBarModule, MatButtonToggleModule, FormsModule],
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss']
 })
 export class EmployeeListComponent implements OnInit {
   employees: Employee[] = [];
-  displayedColumns: string[] = ['id', 'name', 'lastName', 'role', 'numberEmployee', 'active', 'actions'];
+  filteredEmployees: Employee[] = [];
+  filterStatus: string = 'todos'; // 'todos', 'activos', 'inactivos'
+  displayedColumns: string[] = ['id', 'name', 'lastName', 'numberEmployee', 'active', 'actions'];
 
   constructor(
     private employeeService: EmployeeService,
+    private userService: UserService,
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef
   ) {}
@@ -33,7 +40,7 @@ export class EmployeeListComponent implements OnInit {
     this.employeeService.getEmployees().subscribe({
       next: (data) => {
         this.employees = data;
-        this.cdr.detectChanges();
+        this.applyFilter(); 
       },
       error: (err) => {
         console.error('Error loading employees', err);
@@ -42,26 +49,47 @@ export class EmployeeListComponent implements OnInit {
     });
   }
 
-  deleteEmployee(id: string | number): void {
-    if (confirm('¿Estás seguro de eliminar este empleado?')) {
-      this.employeeService.deleteEmployee(id).subscribe({
+  applyFilter(): void {
+    if (this.filterStatus === 'activos') {
+      this.filteredEmployees = this.employees.filter(e => e.active === true || String(e.active) === 'true');
+    } else if (this.filterStatus === 'inactivos') {
+      this.filteredEmployees = this.employees.filter(e => e.active === false || String(e.active) === 'false');
+    } else {
+      this.filteredEmployees = [...this.employees];
+    }
+    this.cdr.detectChanges();
+  }
+
+  deleteEmployee(employee: Employee): void {
+    if (confirm('¿Estás seguro de dar de baja este empleado?')) {
+      const requests = [this.employeeService.deleteEmployee(employee.id!)];
+      if (employee.user) {
+        requests.push(this.userService.deleteUser(employee.user));
+      }
+      
+      forkJoin(requests).subscribe({
         next: () => {
-          this.snackBar.open('Empleado eliminado', 'Cerrar', { duration: 3000 });
+          this.snackBar.open('Empleado y Usuario dados de baja', 'Cerrar', { duration: 3000 });
           this.loadEmployees();
         },
         error: (err) => {
           console.error('Error deleting employee', err);
-          this.snackBar.open('Error al eliminar empleado', 'Cerrar', { duration: 3000 });
+          this.snackBar.open('Error al dar de baja empleado', 'Cerrar', { duration: 3000 });
         }
       });
     }
   }
 
-  restoreEmployee(id: string | number): void {
+  restoreEmployee(employee: Employee): void {
     if (confirm('¿Estás seguro de restaurar este empleado?')) {
-      this.employeeService.restoreEmployee(id).subscribe({
+      const requests = [this.employeeService.restoreEmployee(employee.id!)];
+      if (employee.user) {
+        requests.push(this.userService.restoreUser(employee.user));
+      }
+
+      forkJoin(requests).subscribe({
         next: () => {
-          this.snackBar.open('Empleado restaurado', 'Cerrar', { duration: 3000 });
+          this.snackBar.open('Empleado y Usuario restaurados', 'Cerrar', { duration: 3000 });
           this.loadEmployees();
         },
         error: (err) => {
@@ -72,7 +100,4 @@ export class EmployeeListComponent implements OnInit {
     }
   }
 
-  getRoleName(roleId: string | number): string {
-    return roleId == 1 ? 'Admin' : roleId == 2 ? 'Employee' : 'Unknown';
-  }
 }

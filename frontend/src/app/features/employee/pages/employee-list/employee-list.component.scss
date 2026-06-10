@@ -11,6 +11,17 @@
       margin: 0;
       color: #333;
     }
+
+    .actions-header {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      
+      .filter-toggle {
+        height: 36px;
+        align-items: center;
+      }
+    }
   }
 
   .employee-table {

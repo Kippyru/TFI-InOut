@@ -31,3 +31,6 @@ app:
   admin:
     username: admin
     password: 1234
+  jwt:
+    secret: ${JWT_SECRET:KeyTieneQueSerMayorA32DigitosSiNoNoAnda}
+    expiration: ${JWT_EXPIRATION:3600000}

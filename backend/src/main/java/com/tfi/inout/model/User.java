@@ -32,9 +32,6 @@ public class User extends BaseEntity implements UserDetails {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @Column(name = "state", length = 20)
-    private String state;
-
     //esto es para el  jwt y eh bueno se explica solo leyendolo
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

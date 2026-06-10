@@ -4,10 +4,7 @@ import com.tfi.inout.dto.UserDto;
 import com.tfi.inout.model.Role;
 import com.tfi.inout.model.User;
 import com.tfi.inout.repository.RoleRepository;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -30,8 +27,16 @@ public abstract class UserMapper {
                 .orElseThrow(() -> new RuntimeException("Role not found"));
     }
 
+    @BeanMapping(
+            nullValuePropertyMappingStrategy =
+                    NullValuePropertyMappingStrategy.IGNORE
+    )
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "password", ignore = true)
     @Mapping(target = "role", source = "role", qualifiedByName = "mapIdtoRole")
-    public abstract void updateUser(UserDto userDto, @MappingTarget User user);
+    public abstract void updateUser(
+            UserDto userDto,
+            @MappingTarget User user);
 
     public abstract List<UserDto> userList(List<User> users);
 }

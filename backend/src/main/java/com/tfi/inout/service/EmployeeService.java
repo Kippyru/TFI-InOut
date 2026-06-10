@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,21 +31,34 @@ public class EmployeeService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    //agregue esto, para generar el numero de empleado, osea legajo, automaticamente, asi se evitan duplicados y se ahorran problemas
+    private String generateEmployeeNumber() {
+        Long max = employeeRepository.findMaxEmployeeNumber();
+
+        if (max == null || max < 1000) {
+            return "1000";
+        }
+
+        return String.valueOf(max + 1);
+    }
+
     @Transactional
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
         Role role = roleRepository.findById(2L)
-                .orElseThrow(() -> new ResourceNotFoundException("Rol not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+
+        String employeeNumber = generateEmployeeNumber();
 
         User user = new User();
-        user.setUsername(employeeDto.getNumberEmployee());
+        user.setUsername(employeeNumber);
         user.setPassword(passwordEncoder.encode(employeeDto.getDni()));
         user.setRole(role);
-        user.setState("Activo");
-
         user = userRepository.save(user);
 
         Employee employee = employeeMapper.toEntity(employeeDto);
+        employee.setNumberEmployee(employeeNumber);
         employee.setUser(user);
+        employee.setDateEntry(LocalDate.now());
         employee = employeeRepository.save(employee);
 
         return employeeMapper.toDto(employee);

@@ -21,4 +21,5 @@ Agregue Customs Cors porq si no Angular le da problemas...
 
 - 10062026  
 Saque la limitacion sql de employee, agrege para que el numero de legajo se haga automaticamente, e hice cambios en el 
-mapper de employee y user para ignorar ciertos campos a la hora de actualizar los datos
+mapper de employee y user para ignorar ciertos campos a la hora de actualizar los datos. Tambien se agrego para que 
+la fecha de creacion del empleado sea automatica  

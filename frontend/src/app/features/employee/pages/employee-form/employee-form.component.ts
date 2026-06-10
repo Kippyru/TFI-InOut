@@ -10,6 +10,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { EmployeeService } from '../../services/employee.service';
+import { UserService } from '../../../../core/services/user.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-employee-form',
@@ -38,9 +40,12 @@ export class EmployeeFormComponent implements OnInit {
     { id: 2, name: 'Employee' }
   ];
 
+  userId: string | number | null = null;
+
   constructor(
     private fb: FormBuilder,
     private employeeService: EmployeeService,
+    private userService: UserService,
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar
@@ -49,7 +54,7 @@ export class EmployeeFormComponent implements OnInit {
       name: ['', Validators.required],
       lastName: ['', Validators.required],
       role: ['', Validators.required],
-      numberEmployee: ['', Validators.required],
+      numberEmployee: [{ value: '', disabled: true }],
       cuil: ['', Validators.required],
       dni: ['', Validators.required],
       state: ['']
@@ -67,14 +72,17 @@ export class EmployeeFormComponent implements OnInit {
   loadEmployeeData(): void {
     this.employeeService.getEmployeeById(this.employeeId!).subscribe({
       next: (data) => {
-        // Formatear el rol si viene como string
-        const employeeData = { ...data, role: Number(data.role) };
+
+        this.userId = data.user ? data.user : null;
+
+        const employeeData = { ...data };
         this.employeeForm.patchValue(employeeData);
+
       },
       error: (err) => {
         console.error('Error loading employee', err);
         this.snackBar.open('Error al cargar datos del empleado', 'Cerrar', { duration: 3000 });
-        this.router.navigate(['/dashboard/employee']); // Asumiendo que la ruta padre es dashboard
+        this.router.navigate(['/dashboard/employee']); //la ruta padre es dashboard
       }
     });
   }
@@ -84,16 +92,41 @@ export class EmployeeFormComponent implements OnInit {
       return;
     }
 
-    const employeeData = this.employeeForm.value;
+    const formData = this.employeeForm.getRawValue();
+
+    const userData: any = {
+      role: formData.role
+    };
+
+    //el legajo generado, es el username
+    if (formData.numberEmployee) {
+      userData.username = formData.numberEmployee;
+    }
+
+    const employeeData = {
+      name: formData.name,
+      lastName: formData.lastName,
+      cuil: formData.cuil,
+      dni: formData.dni,
+      state: formData.state,
+      active: true
+    };
 
     if (this.isEditMode) {
-      this.employeeService.updateEmployee(this.employeeId!, employeeData).subscribe({
+      const updateRequests = [];
+      updateRequests.push(this.employeeService.updateEmployee(this.employeeId!, employeeData));
+
+      if (this.userId) {
+        updateRequests.push(this.userService.updateUser(this.userId, userData));
+      }
+
+      forkJoin(updateRequests).subscribe({
         next: () => {
           this.snackBar.open('Empleado actualizado exitosamente', 'Cerrar', { duration: 3000 });
           this.router.navigate(['/dashboard/employee']);
         },
         error: (err) => {
-          console.error('Error updating employee', err);
+          console.error('Error updating employee and user', err);
           this.snackBar.open('Error al actualizar empleado', 'Cerrar', { duration: 3000 });
         }
       });

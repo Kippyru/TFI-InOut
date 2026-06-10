@@ -31,11 +31,12 @@
             </mat-select>
             <mat-error *ngIf="employeeForm.get('role')?.hasError('required')">El rol es requerido</mat-error>
           </mat-form-field>
+        </div>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>N° Empleado</mat-label>
-            <input matInput formControlName="numberEmployee" placeholder="Ej. 1234">
-            <mat-error *ngIf="employeeForm.get('numberEmployee')?.hasError('required')">El número de empleado es requerido</mat-error>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width" *ngIf="isEditMode">
+            <mat-label>N° Empleado (Legajo)</mat-label>
+            <input matInput formControlName="numberEmployee" placeholder="Generado automáticamente">
           </mat-form-field>
         </div>
 

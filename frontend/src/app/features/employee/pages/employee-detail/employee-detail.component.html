@@ -17,7 +17,7 @@
         <mat-icon>person</mat-icon>
       </div>
       <mat-card-title>{{ employee.name }} {{ employee.lastName }}</mat-card-title>
-      <mat-card-subtitle>{{ getRoleName(employee.role) }}</mat-card-subtitle>
+      <mat-card-subtitle>{{ employee.numberEmployee }}</mat-card-subtitle>
     </mat-card-header>
 
     <mat-divider></mat-divider>
@@ -50,9 +50,9 @@
         </div>
         <div class="info-item">
           <span class="label">Estado:</span>
-          <span class="value" [class.active-status]="employee.active == 1"
-            [class.inactive-status]="employee.active == 0">
-            {{ employee.active == 1 ? 'Activo' : 'Inactivo' }}
+          <span class="value" [class.active-status]="employee.active === true"
+            [class.inactive-status]="employee.active === false">
+            {{ employee.active ? 'Activo' : 'Inactivo' }}
           </span>
         </div>
       </div>

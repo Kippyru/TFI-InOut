@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>Agregar Detalle: {{data.scheduleName}}</h2>
+<mat-dialog-content>
+  <form [formGroup]="detailForm" class="dialog-form">
+    
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Días de la semana</mat-label>
+      <mat-select formControlName="days" multiple>
+        <mat-option *ngFor="let day of days" [value]="day">
+          {{day}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="detailForm.get('days')?.hasError('required')">Debe seleccionar al menos un día</mat-error>
+    </mat-form-field>
+
+    <div class="time-inputs">
+      <mat-form-field appearance="outline">
+        <mat-label>Hora de Entrada</mat-label>
+        <input matInput type="time" formControlName="checkIn">
+        <mat-error *ngIf="detailForm.get('checkIn')?.hasError('required')">Requerido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Hora de Salida</mat-label>
+        <input matInput type="time" formControlName="checkOut">
+        <mat-error *ngIf="detailForm.get('checkOut')?.hasError('required')">Requerido</mat-error>
+      </mat-form-field>
+    </div>
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="loading">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="detailForm.invalid || loading">
+    <mat-icon *ngIf="!loading">save</mat-icon>
+    <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+    Guardar
+  </button>
+</mat-dialog-actions>

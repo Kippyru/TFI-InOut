@@ -1,0 +1,18 @@
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+
+  .full-width {
+    width: 100%;
+  }
+
+  .time-inputs {
+    display: flex;
+    gap: 16px;
+
+    mat-form-field {
+      flex: 1;
+    }
+  }
+}

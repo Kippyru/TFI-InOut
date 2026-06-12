@@ -6,28 +6,47 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSortModule, Sort } from '@angular/material/sort';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 import { EmployeeService } from '../../services/employee.service';
 import { UserService } from '../../../../core/services/user.service';
+import { ScheduleService } from '../../../schedule/services/schedule.service';
 import { Employee } from '../../models/employee.model';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+
+interface EmployeeWithSchedule extends Employee {
+  scheduleName?: string;
+}
 
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatTableModule, MatButtonModule, MatIconModule, MatSnackBarModule, MatButtonToggleModule, FormsModule],
+  imports: [
+    CommonModule, RouterModule, MatTableModule, MatButtonModule, MatIconModule,
+    MatSnackBarModule, MatButtonToggleModule, FormsModule,
+    MatInputModule, MatFormFieldModule, MatSortModule, MatTooltipModule
+  ],
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss']
 })
 export class EmployeeListComponent implements OnInit {
-  employees: Employee[] = [];
-  filteredEmployees: Employee[] = [];
-  filterStatus: string = 'todos'; // 'todos', 'activos', 'inactivos'
-  displayedColumns: string[] = ['id', 'name', 'lastName', 'numberEmployee', 'active', 'actions'];
+  employees: EmployeeWithSchedule[] = [];
+  filteredEmployees: EmployeeWithSchedule[] = [];
+  filterStatus: string = 'todos';
+  searchQuery: string = '';
+  displayedColumns: string[] = ['id', 'name', 'lastName', 'numberEmployee', 'scheduleName', 'active', 'actions'];
+
+  sortField: string = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
   constructor(
     private employeeService: EmployeeService,
     private userService: UserService,
+    private scheduleService: ScheduleService,
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef
   ) {}
@@ -39,8 +58,25 @@ export class EmployeeListComponent implements OnInit {
   loadEmployees(): void {
     this.employeeService.getEmployees().subscribe({
       next: (data) => {
-        this.employees = data;
-        this.applyFilter(); 
+        const requests = data.map(emp =>
+          this.scheduleService.getActiveScheduleForEmployee(emp.id!).pipe(
+            map(se => ({ ...emp, scheduleName: se?.scheduleName ?? '—' } as EmployeeWithSchedule)),
+            catchError(() => of({ ...emp, scheduleName: '—' } as EmployeeWithSchedule))
+          )
+        );
+
+        if (requests.length === 0) {
+          this.employees = [];
+          this.applyFilter();
+          return;
+        }
+
+        forkJoin(requests).subscribe({
+          next: (enriched) => {
+            this.employees = enriched;
+            this.applyFilter();
+          }
+        });
       },
       error: (err) => {
         console.error('Error loading employees', err);
@@ -50,14 +86,56 @@ export class EmployeeListComponent implements OnInit {
   }
 
   applyFilter(): void {
+    let result = [...this.employees];
+
+    // Status filter
     if (this.filterStatus === 'activos') {
-      this.filteredEmployees = this.employees.filter(e => e.active === true || String(e.active) === 'true');
+      result = result.filter(e => e.active === true || String(e.active) === 'true');
     } else if (this.filterStatus === 'inactivos') {
-      this.filteredEmployees = this.employees.filter(e => e.active === false || String(e.active) === 'false');
-    } else {
-      this.filteredEmployees = [...this.employees];
+      result = result.filter(e => e.active === false || String(e.active) === 'false');
     }
+
+    // Text search
+    const q = this.searchQuery.trim().toLowerCase();
+    if (q) {
+      result = result.filter(e =>
+        String(e.id ?? '').toLowerCase().includes(q) ||
+        (e.name ?? '').toLowerCase().includes(q) ||
+        (e.lastName ?? '').toLowerCase().includes(q) ||
+        (e.numberEmployee ?? '').toLowerCase().includes(q) ||
+        (e.cuil ?? '').toLowerCase().includes(q) ||
+        (e.dni ?? '').toLowerCase().includes(q) ||
+        (e.scheduleName ?? '').toLowerCase().includes(q)
+      );
+    }
+
+    // Sorting
+    if (this.sortField) {
+      result.sort((a, b) => {
+        const aVal = (a as any)[this.sortField] ?? '';
+        const bVal = (b as any)[this.sortField] ?? '';
+        const cmp = String(aVal).localeCompare(String(bVal), undefined, { numeric: true });
+        return this.sortDirection === 'asc' ? cmp : -cmp;
+      });
+    }
+
+    this.filteredEmployees = result;
     this.cdr.detectChanges();
+  }
+
+  onSort(field: string): void {
+    if (this.sortField === field) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = field;
+      this.sortDirection = 'asc';
+    }
+    this.applyFilter();
+  }
+
+  getSortIcon(field: string): string {
+    if (this.sortField !== field) return 'unfold_more';
+    return this.sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward';
   }
 
   deleteEmployee(employee: Employee): void {
@@ -99,5 +177,4 @@ export class EmployeeListComponent implements OnInit {
       });
     }
   }
-
 }

@@ -6,8 +6,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog } from '@angular/material/dialog';
 import { EmployeeService } from '../../services/employee.service';
 import { Employee } from '../../models/employee.model';
+import { AssignScheduleDialogComponent } from '../../components/assign-schedule-dialog/assign-schedule-dialog.component';
 
 @Component({
   selector: 'app-employee-detail',
@@ -32,7 +34,8 @@ export class EmployeeDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private employeeService: EmployeeService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -62,5 +65,24 @@ export class EmployeeDetailComponent implements OnInit {
 
   getRoleName(roleId: string | number | undefined): string {
     return roleId == 1 ? 'Admin' : roleId == 2 ? 'Employee' : 'Desconocido';
+  }
+
+  openAssignScheduleDialog(): void {
+    if (this.employee && this.employee.id) {
+      const dialogRef = this.dialog.open(AssignScheduleDialogComponent, {
+        width: '450px',
+        data: {
+          employeeId: this.employee.id,
+          employeeName: `${this.employee.name} ${this.employee.lastName}`
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          // If assignment was successful, we could reload employee data or just show a message
+          alert('Turno asignado correctamente al empleado.');
+        }
+      });
+    }
   }
 }

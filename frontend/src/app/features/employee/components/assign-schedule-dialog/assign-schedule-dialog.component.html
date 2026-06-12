@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>Asignar Turno a: {{data.employeeName}}</h2>
+<mat-dialog-content>
+  
+  <div *ngIf="loadingSchedules" class="loading-state">
+    <mat-spinner diameter="30"></mat-spinner>
+    <p>Cargando turnos disponibles...</p>
+  </div>
+
+  <form [formGroup]="assignForm" class="dialog-form" *ngIf="!loadingSchedules">
+    
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Seleccionar Turno</mat-label>
+      <mat-select formControlName="scheduleId">
+        <mat-option *ngFor="let schedule of schedules" [value]="schedule.id">
+          {{schedule.name}} ({{schedule.hourWork}}hs)
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="assignForm.get('scheduleId')?.hasError('required')">Debe seleccionar un turno</mat-error>
+    </mat-form-field>
+
+    <div class="date-inputs">
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha de Inicio</mat-label>
+        <input matInput [matDatepicker]="pickerStart" formControlName="startDate">
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="pickerStart"></mat-datepicker-toggle>
+        <mat-datepicker #pickerStart></mat-datepicker>
+        <mat-error *ngIf="assignForm.get('startDate')?.hasError('required')">Requerido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha de Fin (Opcional)</mat-label>
+        <input matInput [matDatepicker]="pickerEnd" formControlName="endDate">
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+        <mat-datepicker #pickerEnd></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="loading">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="assignForm.invalid || loading || loadingSchedules">
+    <mat-icon *ngIf="!loading">assignment_ind</mat-icon>
+    <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+    Asignar
+  </button>
+</mat-dialog-actions>

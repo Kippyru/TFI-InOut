@@ -19,6 +19,8 @@ public class ScheduleEmployeeDto {
     @NotNull(message = "El ID del horario es obligatorio")
     private Long scheduleId;
 
+    private String scheduleName;
+
     @NotNull(message = "La fecha de inicio es obligatoria")
     private LocalDate startDate;
 

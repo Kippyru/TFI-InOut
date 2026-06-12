@@ -18,6 +18,10 @@ export const dashboardRoutes: Routes = [
                 loadChildren: () => import('./employee/employee.routes').then(m => m.employeeRoutes)
             },
             {
+                path: 'schedule',
+                loadChildren: () => import('./schedule/schedule.routes').then(m => m.scheduleRoutes)
+            },
+            {
                 path: '**',
                 pathMatch: 'full',
                 redirectTo: 'home',

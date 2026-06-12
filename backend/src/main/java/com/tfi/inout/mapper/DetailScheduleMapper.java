@@ -4,6 +4,7 @@ import com.tfi.inout.dto.DetailScheduleDto;
 import com.tfi.inout.model.DetailSchedule;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface DetailScheduleMapper {
@@ -12,4 +13,8 @@ public interface DetailScheduleMapper {
 
     @Mapping(source = "schedule.id", target = "scheduleId")
     DetailScheduleDto toDto(DetailSchedule entity);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(source = "scheduleId", target = "schedule.id")
+    void updateDetailSchedule(DetailScheduleDto dto, @MappingTarget DetailSchedule entity);
 }

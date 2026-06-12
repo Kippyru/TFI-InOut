@@ -14,4 +14,7 @@ public interface ScheduleEmployeeRepository extends JpaRepository<ScheduleEmploy
 
     @Query("SELECT se FROM ScheduleEmployee se WHERE se.employee.id = :employeeId AND se.startDate <= :date AND (se.endDate IS NULL OR se.endDate >= :date)")
     Optional<ScheduleEmployee> findActiveScheduleByEmployeeAndDate(@Param("employeeId") Long employeeId, @Param("date") LocalDate date);
+
+    @Query("SELECT se FROM ScheduleEmployee se WHERE se.employee.id = :employeeId ORDER BY se.startDate DESC")
+    java.util.List<ScheduleEmployee> findByEmployeeId(@Param("employeeId") Long employeeId);
 }

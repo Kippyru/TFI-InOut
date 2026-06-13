@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../../../shared/ui/materials-module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { ScheduleService } from '../../../schedule/services/schedule.service';
 import { ScheduleDto, ScheduleEmployeeDto } from '../../../schedule/models/schedule.model';
 
@@ -10,6 +11,9 @@ import { ScheduleDto, ScheduleEmployeeDto } from '../../../schedule/models/sched
   selector: 'app-assign-schedule-dialog',
   standalone: true,
   imports: [CommonModule, MaterialModule, ReactiveFormsModule],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'es-AR' }
+  ],
   templateUrl: './assign-schedule-dialog.component.html',
   styleUrls: ['./assign-schedule-dialog.component.scss']
 })

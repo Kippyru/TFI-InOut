@@ -41,7 +41,7 @@ export class AssignScheduleDialogComponent implements OnInit {
     this.scheduleService.listSchedules().subscribe({
       next: (data) => {
         // Only active schedules can be assigned ideally, but we'll show all or filter here
-        this.schedules = data.filter(s => s.state !== 'INACTIVO');
+        this.schedules = data.filter(s => s.active === true);
         this.loadingSchedules = false;
         this.cdr.detectChanges();
       },

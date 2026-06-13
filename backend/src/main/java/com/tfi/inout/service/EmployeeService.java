@@ -18,6 +18,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+
 @Service
 public class EmployeeService {
     @Autowired
@@ -67,6 +69,16 @@ public class EmployeeService {
     public List<EmployeeDto> list() {
         List<Employee> employees = employeeRepository.findAll();
         return employeeMapper.toList(employees);
+    }
+
+    public EmployeeDto getMe() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        // username == numberEmployee (legajo) for employees
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Employee employee = employeeRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found for current user"));
+        return employeeMapper.toDto(employee);
     }
 
     public EmployeeDto listId(Long id) {

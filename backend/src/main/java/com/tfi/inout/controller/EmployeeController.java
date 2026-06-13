@@ -22,6 +22,11 @@ public class EmployeeController {
         return ResponseEntity.ok("Employee successfully created");
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<EmployeeDto> getMe() {
+        return ResponseEntity.ok(employeeService.getMe());
+    }
+
     @GetMapping("/list")
     public List<EmployeeDto> listEmployees() {
         return employeeService.list();

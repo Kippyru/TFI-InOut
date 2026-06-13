@@ -15,7 +15,7 @@ public class ScheduleDto {
     @NotBlank(message = "El nombre del horario no puede estar vacío")
     private String name;
 
-    private String state;
+    private Boolean active;
 
     @NotNull(message = "Las horas de trabajo son obligatorias")
     private Integer hourWork;

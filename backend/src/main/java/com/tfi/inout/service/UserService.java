@@ -1,11 +1,13 @@
 package com.tfi.inout.service;
 
+import com.tfi.inout.dto.EmployeeDto;
 import com.tfi.inout.dto.UserDto;
 import com.tfi.inout.mapper.UserMapper;
 import com.tfi.inout.model.User;
 import com.tfi.inout.repository.UserRepository;
 import com.tfi.inout.handler.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,6 +37,14 @@ public class UserService {
 
     public UserDto listId(Long id) {
         User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return userMapper.toDto(user);
+    }
+
+    public UserDto getMe() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        // username == numberEmployee (legajo) for employees
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return userMapper.toDto(user);
     }

@@ -1,5 +1,6 @@
 package com.tfi.inout.controller;
 
+import com.tfi.inout.dto.EmployeeDto;
 import com.tfi.inout.dto.UserDto;
 import com.tfi.inout.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,4 +51,10 @@ public class UserController {
         userService.delete(id);
         return ResponseEntity.ok("User successfully deleted");
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> getMe() {
+        return ResponseEntity.ok(userService.getMe());
+    }
+
 }

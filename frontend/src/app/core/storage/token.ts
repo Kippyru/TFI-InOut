@@ -1,3 +1,4 @@
+// token.ts
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -24,5 +25,27 @@ export class Token {
 
   logout() {
     localStorage.removeItem('auth-token');
+  }
+
+  getPayload(): any | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payloadBase64 = token.split('.')[1];
+      const payloadJson = atob(payloadBase64.replace(/-/g, '+').replace(/_/g, '/'));
+      return JSON.parse(payloadJson);
+    } catch {
+      return null;
+    }
+  }
+
+  getRole(): number | null {
+    const payload = this.getPayload();
+    return payload?.role ?? null;
+  }
+
+  isAdmin(): boolean {
+    return this.getRole() === 1;
   }
 }

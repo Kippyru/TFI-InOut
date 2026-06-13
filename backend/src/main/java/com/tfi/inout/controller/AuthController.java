@@ -2,6 +2,7 @@ package com.tfi.inout.controller;
 
 import com.tfi.inout.dto.AuthResponseDto;
 import com.tfi.inout.dto.LoginRequestDto;
+import com.tfi.inout.model.User;
 import com.tfi.inout.security.CustomUserDetailsService;
 import com.tfi.inout.security.JwtService;
 import jakarta.validation.Valid;
@@ -11,6 +12,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -30,7 +34,11 @@ public class AuthController {
         );
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
-        final String jwt = jwtService.generateToken(userDetails);
+
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("role", ((User) userDetails).getRole().getId());
+
+        final String jwt = jwtService.generateToken(extraClaims, userDetails);
 
         return ResponseEntity.ok(new AuthResponseDto(jwt));
     }

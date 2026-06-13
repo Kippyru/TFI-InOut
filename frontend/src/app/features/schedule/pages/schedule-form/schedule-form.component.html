@@ -1,7 +1,7 @@
 <div class="form-container">
   <div class="header">
     <h1>{{ isEditMode ? 'Editar Turno' : 'Nuevo Turno' }}</h1>
-    <button mat-icon-button routerLink="..">
+    <button mat-icon-button routerLink="/dashboard/schedule">
       <mat-icon>arrow_back</mat-icon>
     </button>
   </div>
@@ -43,7 +43,7 @@
         </div>
 
         <div class="form-actions">
-          <button mat-button type="button" routerLink="..">Cancelar</button>
+          <button mat-button type="button" routerLink="/dashboard/schedule">Cancelar</button>
           <button mat-raised-button color="primary" type="submit" [disabled]="scheduleForm.invalid || loading">
             <mat-icon *ngIf="!loading">save</mat-icon>
             <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>

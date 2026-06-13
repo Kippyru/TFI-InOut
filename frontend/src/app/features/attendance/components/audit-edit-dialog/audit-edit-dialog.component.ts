@@ -35,9 +35,8 @@ export class AuditEditDialogComponent {
     private userService: UserService,
     private snackBar: MatSnackBar
   ) {
-    // Current value might be HH:mm:ss, but HTML input type="time" uses HH:mm.
-    // If we want seconds, step="1" in html allows it, but often HH:mm is sufficient.
-    // The backend requires 00:00:00 format. We'll ensure it when saving.
+
+    // The backend requires 00:00:00 format
     this.newValue = data.currentValue.substring(0, 5); // "HH:mm"
   }
 
@@ -53,10 +52,10 @@ export class AuditEditDialogComponent {
 
     this.loading = true;
 
-    // We need adminId. Assuming userService.getCurrentUser() or similar exists.
+    // We need adminId for auditoria sisisi
     this.userService.getMe().subscribe({
       next: (admin) => {
-        const adminId = admin.id; // User id of the admin
+        const adminId = admin.id;
 
         this.attendanceService.auditAttendance(adminId, this.data.eventId, this.reason, formattedTime).subscribe({
           next: () => {

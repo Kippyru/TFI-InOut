@@ -1,7 +1,7 @@
 export interface ScheduleDto {
     id?: number;
     name: string;
-    state?: string;
+    active?: boolean;
     hourWork: number;
     checkInTolerance: number;
     checkOutTolerance: number;

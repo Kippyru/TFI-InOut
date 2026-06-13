@@ -5,6 +5,8 @@ import com.tfi.inout.model.EventAttendance;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface EventAttendanceMapper {
 
@@ -15,4 +17,5 @@ public interface EventAttendanceMapper {
     EventAttendanceDto toDto(EventAttendance eventAttendance);
 
 
+    List<EventAttendanceDto> toList(List<EventAttendance> attendances);
 }

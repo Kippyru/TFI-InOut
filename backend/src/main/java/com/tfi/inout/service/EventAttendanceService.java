@@ -1,5 +1,6 @@
 package com.tfi.inout.service;
 
+import com.tfi.inout.dto.AttendanceStatusDto;
 import com.tfi.inout.dto.EventAttendanceDto;
 import com.tfi.inout.mapper.EventAttendanceMapper;
 import com.tfi.inout.model.DetailSchedule;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,6 +32,49 @@ public class EventAttendanceService {
     private final EventAttendanceMapper mapper;
     private final ScheduleEmployeeRepository scheduleEmployeeRepository;
     private final DetailScheduleRepository detailScheduleRepository;
+    private final EventAttendanceMapper eventAttendanceMapper;
+
+    public AttendanceStatusDto getAttendanceStatus(Long employeeId) {
+        employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        Optional<ScheduleEmployee> scheduleEmployeeOpt = scheduleEmployeeRepository
+                .findActiveScheduleByEmployeeAndDate(employeeId, today);
+        boolean hasSchedule = scheduleEmployeeOpt.isPresent();
+
+        LocalTime scheduledCheckIn = null;
+        LocalTime scheduledCheckOut = null;
+        Integer checkInTolerance = null;
+        Integer checkOutTolerance = null;
+
+        if (hasSchedule) {
+            String dayOfWeek = today.getDayOfWeek().name();
+            com.tfi.inout.model.Schedule schedule = scheduleEmployeeOpt.get().getSchedule();
+            checkInTolerance = schedule.getCheckInTolerance();
+            checkOutTolerance = schedule.getCheckOutTolerance();
+
+            Optional<DetailSchedule> detailOpt = detailScheduleRepository
+                    .findByScheduleIdAndDay(schedule.getId(), dayOfWeek);
+            if (detailOpt.isPresent()) {
+                DetailSchedule detail = detailOpt.get();
+                scheduledCheckIn = detail.getCheckIn();
+                scheduledCheckOut = detail.getCheckOut();
+            }
+        }
+
+        String nextEvent = determineEventType(employeeId, today, now);
+
+        EventAttendanceDto lastEvent = repository.findByEmployeeIdAndDate(employeeId, today)
+                .stream()
+                .max((e1, e2) -> e1.getHour().compareTo(e2.getHour()))
+                .map(mapper::toDto)
+                .orElse(null);
+
+        return new AttendanceStatusDto(nextEvent, lastEvent, hasSchedule, scheduledCheckIn, scheduledCheckOut, checkInTolerance, checkOutTolerance);
+    }
 
     @Transactional
     public EventAttendanceDto registerAttendance(Long employeeId, String device) {
@@ -41,9 +86,11 @@ public class EventAttendanceService {
 
         String nextEvent = determineEventType(employeeId, today, now);
 
-        Optional<EventAttendance> existingEvent = repository.findByEmployeeIdAndDateAndEventType(employeeId, today, nextEvent);
+        Optional<EventAttendance> existingEvent = repository.findByEmployeeIdAndDateAndEventType(employeeId, today,
+                nextEvent);
         if (existingEvent.isPresent()) {
-            throw new BusinessException("Already checked " + (nextEvent.equals("CHECK_IN") ? "in" : "out") + " for today");
+            throw new BusinessException(
+                    "Already checked " + (nextEvent.equals("CHECK_IN") ? "in" : "out") + " for today");
         }
 
         EventAttendance attendance = new EventAttendance();
@@ -59,11 +106,13 @@ public class EventAttendanceService {
         return mapper.toDto(attendance);
     }
 
-    private String determineEventType(Long employeeId, LocalDate date, LocalTime time) {
-        Optional<ScheduleEmployee> scheduleEmployeeOpt = scheduleEmployeeRepository.findActiveScheduleByEmployeeAndDate(employeeId, date);
+    public String determineEventType(Long employeeId, LocalDate date, LocalTime time) {
+        Optional<ScheduleEmployee> scheduleEmployeeOpt = scheduleEmployeeRepository
+                .findActiveScheduleByEmployeeAndDate(employeeId, date);
         if (scheduleEmployeeOpt.isPresent()) {
             String dayOfWeek = date.getDayOfWeek().name();
-            Optional<DetailSchedule> detailOpt = detailScheduleRepository.findByScheduleIdAndDay(scheduleEmployeeOpt.get().getSchedule().getId(), dayOfWeek);
+            Optional<DetailSchedule> detailOpt = detailScheduleRepository
+                    .findByScheduleIdAndDay(scheduleEmployeeOpt.get().getSchedule().getId(), dayOfWeek);
             if (detailOpt.isPresent()) {
                 DetailSchedule detail = detailOpt.get();
                 long diffIn = Math.abs(ChronoUnit.MINUTES.between(time, detail.getCheckIn()));
@@ -76,13 +125,20 @@ public class EventAttendanceService {
                 }
             }
         }
-        
+
         Optional<EventAttendance> lastEventOpt = repository.findByEmployeeIdAndDate(employeeId, date).stream()
                 .max((e1, e2) -> e1.getHour().compareTo(e2.getHour()));
-        
+
         if (lastEventOpt.isEmpty()) {
             return "CHECK_IN";
         }
         return lastEventOpt.get().getEventType().equals("CHECK_IN") ? "CHECK_OUT" : "CHECK_IN";
+    }
+
+    public List<EventAttendanceDto> list(LocalDate date) {
+        List<EventAttendance> attendances = (date != null)
+                ? repository.findByDate(date)
+                : repository.findAll();
+        return eventAttendanceMapper.toList(attendances);
     }
 }

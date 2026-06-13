@@ -49,7 +49,7 @@ export class EmployeeListComponent implements OnInit {
     private scheduleService: ScheduleService,
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadEmployees();
@@ -144,7 +144,7 @@ export class EmployeeListComponent implements OnInit {
       if (employee.user) {
         requests.push(this.userService.deleteUser(employee.user));
       }
-      
+
       forkJoin(requests).subscribe({
         next: () => {
           this.snackBar.open('Empleado y Usuario dados de baja', 'Cerrar', { duration: 3000 });

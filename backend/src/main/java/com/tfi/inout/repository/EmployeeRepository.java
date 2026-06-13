@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
@@ -20,4 +21,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
                 FROM Employee e
             """)
     Long findMaxEmployeeNumber();
+
+    Optional<Employee> findByUserId(Long userId);
+
+    List<Employee> findByActiveTrue(int active);
+
 }

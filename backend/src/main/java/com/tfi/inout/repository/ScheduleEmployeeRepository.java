@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,4 +18,13 @@ public interface ScheduleEmployeeRepository extends JpaRepository<ScheduleEmploy
 
     @Query("SELECT se FROM ScheduleEmployee se WHERE se.employee.id = :employeeId ORDER BY se.startDate DESC")
     java.util.List<ScheduleEmployee> findByEmployeeId(@Param("employeeId") Long employeeId);
+
+    @Query("""
+    SELECT se
+    FROM ScheduleEmployee se
+    WHERE :date BETWEEN se.startDate
+                     AND COALESCE(se.endDate, :date)
+""")
+    List<ScheduleEmployee> findActiveSchedulesByDate(
+            @Param("date") LocalDate date);
 }

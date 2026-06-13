@@ -9,10 +9,10 @@ import { User } from '../../shared/models/user.model';
 export class UserService {
   private apiUrl = 'http://localhost:8080/api/users';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   createUser(user: User): Observable<any> {
-    
+
     return this.http.post(this.apiUrl, user);
   }
 
@@ -26,5 +26,9 @@ export class UserService {
 
   restoreUser(id: string | number): Observable<any> {
     return this.http.put(`${this.apiUrl}/restore/${id}`, {}, { responseType: 'text' });
+  }
+
+  getMe(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/me`);
   }
 }

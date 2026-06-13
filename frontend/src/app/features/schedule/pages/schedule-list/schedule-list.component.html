@@ -38,6 +38,16 @@
         <td mat-cell *matCellDef="let element"> {{element.checkInTolerance}}m / {{element.checkOutTolerance}}m </td>
       </ng-container>
 
+      <!-- Status Column -->
+      <ng-container matColumnDef="active">
+        <th mat-header-cell *matHeaderCellDef> Estado </th>
+        <td mat-cell *matCellDef="let element">
+          <span [class.active]="element.active == 1 || element.active === true || element.active === '1'"
+            [class.inactive]="element.active == 0 || element.active === false || element.active === '0'">
+            {{ (element.active == 1 || element.active === true || element.active === '1') ? 'Activo' : 'Inactivo' }}
+          </span>
+        </td>
+      </ng-container>
 
       <!-- Actions Column -->
       <ng-container matColumnDef="actions">

@@ -24,7 +24,7 @@ export class ScheduleListComponent implements OnInit, AfterViewInit {
     }
   }
   dataSource = new MatTableDataSource<ScheduleDto>();
-  displayedColumns: string[] = ['id', 'name', 'hourWork', 'tolerances', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'hourWork', 'tolerances', 'active', 'actions'];
   loading = true;
 
   constructor(

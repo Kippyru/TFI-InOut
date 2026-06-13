@@ -1,0 +1,132 @@
+<div class="attendance-page">
+  <div class="glass-card">
+
+    <!-- ── Loading state ─────────────────────────────────── -->
+    @if (loading()) {
+      <div class="loading-wrap">
+        <div class="loading-spinner"></div>
+        <span class="loading-text">Cargando estado de asistencia…</span>
+      </div>
+    }
+
+    <!-- ── Error loading state ────────────────────────────── -->
+    @if (!loading() && loadError()) {
+      <div class="msg-banner error">
+        <mat-icon>wifi_off</mat-icon>
+        <span>{{ loadError() }}</span>
+      </div>
+      <button class="retry-btn" (click)="reload()">
+        <mat-icon>refresh</mat-icon> Reintentar
+      </button>
+    }
+
+    <!-- ── Admin info panel (no employee record) ─────────── -->
+    @if (!loading() && isAdminView()) {
+      <div class="employee-info">
+        <p class="employee-greeting">Vista de administrador</p>
+        <h1 class="employee-name">Panel de Asistencia</h1>
+      </div>
+      <div class="clock-section">
+        <div class="clock-time">{{ liveClock() }}</div>
+        <div class="clock-date">{{ liveDate() }}</div>
+      </div>
+      <div class="msg-banner info">
+        <mat-icon>admin_panel_settings</mat-icon>
+        <span>Tu usuario es administrador y no tiene un empleado asociado. Esta pantalla es para que los empleados registren sus fichajes.</span>
+      </div>
+    }
+
+    <!-- ── Main content ───────────────────────────────────── -->
+    @if (!loading() && !loadError() && employee()) {
+
+      <!-- Employee info -->
+      <div class="employee-info">
+        <p class="employee-greeting">Bienvenido/a</p>
+        <h1 class="employee-name">{{ employee()!.name }} {{ employee()!.lastName }}</h1>
+        <span class="employee-number">Legajo #{{ employee()!.numberEmployee }}</span>
+      </div>
+
+      <!-- Live clock -->
+      <div class="clock-section">
+        <div class="clock-time">{{ liveClock() }}</div>
+        <div class="clock-date">{{ liveDate() }}</div>
+      </div>
+
+      <!-- Schedule badge -->
+      @if (status()) {
+        <div [class]="'schedule-badge ' + (status()!.hasSchedule ? 'has-schedule' : 'no-schedule')">
+          <mat-icon class="badge-icon">{{ status()!.hasSchedule ? 'event_available' : 'event_busy' }}</mat-icon>
+          <span>{{ status()!.hasSchedule ? 'Turno asignado hoy' : 'Sin turno asignado hoy' }}</span>
+        </div>
+
+        <!-- Schedule warning banner -->
+        @if (scheduleWarning()) {
+          <div [class]="'msg-banner ' + scheduleWarningClass()">
+            <mat-icon>{{ scheduleWarningClass() === 'error' ? 'error_outline' : 'warning_amber' }}</mat-icon>
+            <span>{{ scheduleWarning() }}</span>
+          </div>
+        }
+      }
+
+      <!-- Last event of the day -->
+      @if (status()?.lastEvent) {
+        <div class="last-event-strip">
+          <div [class]="'last-event-icon ' + (status()!.lastEvent!.eventType === 'CHECK_IN' ? 'check-in' : 'check-out')">
+            <mat-icon>{{ status()!.lastEvent!.eventType === 'CHECK_IN' ? 'login' : 'logout' }}</mat-icon>
+          </div>
+          <div class="last-event-text">
+            <span class="last-event-label">Último registro hoy</span>
+            <span class="last-event-value">
+              {{ status()!.lastEvent!.eventType === 'CHECK_IN' ? '✔ Entrada' : '✔ Salida' }}
+              — {{ formatTime(status()!.lastEvent!.hour) }}
+            </span>
+          </div>
+        </div>
+      }
+
+      <!-- ── Success panel (post-register) ───────────────── -->
+      @if (successEvent()) {
+        <div class="success-panel">
+          <div [class]="'success-icon-wrap ' + (successEvent()!.eventType === 'CHECK_IN' ? 'check-in' : 'check-out')">
+            <mat-icon>{{ successEvent()!.eventType === 'CHECK_IN' ? 'login' : 'logout' }}</mat-icon>
+          </div>
+          <p class="success-title">
+            {{ successEvent()!.eventType === 'CHECK_IN' ? '✔ Entrada registrada' : '✔ Salida registrada' }}
+          </p>
+          <div class="success-time">{{ formatTime(successEvent()!.hour) }}</div>
+          <span class="success-device">desde {{ successEvent()!.device }}</span>
+        </div>
+      }
+
+      <!-- ── Register error message ───────────────────────── -->
+      @if (registerError()) {
+        <div [class]="'msg-banner ' + registerErrorClass()">
+          <mat-icon>{{ registerErrorIcon() }}</mat-icon>
+          <span>{{ registerError() }}</span>
+        </div>
+      }
+
+      <!-- ── Action button ────────────────────────────────── -->
+      @if (!successEvent() && status()) {
+        <div class="action-section">
+          <button
+            id="attendance-action-btn"
+            [class]="'action-btn ' + (status()!.nextEvent === 'CHECK_IN' ? 'btn-checkin' : 'btn-checkout')"
+            [disabled]="submitting() || !canRegister()"
+            (click)="register()"
+          >
+            @if (submitting()) {
+              <div class="btn-spinner"></div>
+              <span>Registrando…</span>
+            } @else {
+              <mat-icon>{{ status()!.nextEvent === 'CHECK_IN' ? 'login' : 'logout' }}</mat-icon>
+              <span>{{ status()!.nextEvent === 'CHECK_IN' ? 'Marcar Entrada' : 'Marcar Salida' }}</span>
+            }
+          </button>
+          <span class="device-chip">Dispositivo detectado: {{ detectedDevice }}</span>
+        </div>
+      }
+
+    }
+  </div>
+</div>

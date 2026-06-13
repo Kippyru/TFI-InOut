@@ -40,19 +40,34 @@
           </mat-form-field>
         </div>
 
+        <div
+            class="validation-error"
+            *ngIf="
+            employeeForm.hasError('dniCuilEqual') &&
+            employeeForm.get('cuil')?.value
+            ">CUIL no puede ser igual al DNI
+        </div>
+
         <div class="form-row">
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>CUIL</mat-label>
-            <input matInput formControlName="cuil" placeholder="Ej. 20123456784">
-            <mat-error *ngIf="employeeForm.get('cuil')?.hasError('required')">El CUIL es requerido</mat-error>
-          </mat-form-field>
+            <input matInput formControlName="cuil" (input)="employeeForm.get('cuil')?.updateValueAndValidity()"
+            placeholder="Ej. 20123456784"
+            type="text" inputmode="numeric" pattern="[0-9]*">
+            <mat-error *ngIf="employeeForm.get('cuil')?.hasError('required')">CUIL es requerido</mat-error>
+            <mat-error *ngIf="employeeForm.get('cuil')?.hasError('pattern')">CUIL debe contener solo números</mat-error>
+            </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>DNI</mat-label>
-            <input matInput formControlName="dni" placeholder="Ej. 12345678">
-            <mat-error *ngIf="employeeForm.get('dni')?.hasError('required')">El DNI es requerido</mat-error>
+            <input matInput formControlName="dni" placeholder="Ej. 12345678"
+            type="text" inputmode="numeric" pattern="[0-9]*">
+            <mat-error *ngIf="employeeForm.get('dni')?.hasError('required')">DNI es requerido</mat-error>
+            <mat-error *ngIf="employeeForm.get('dni')?.hasError('pattern')">DNI debe contener solo números</mat-error>
           </mat-form-field>
         </div>
+
+        
 
         <div class="form-row">
           <mat-form-field appearance="outline" class="full-width">

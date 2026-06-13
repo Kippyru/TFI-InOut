@@ -2,7 +2,8 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../../ui/materials-module';
-import { UserService } from '../../../core/services/user.service';
+import { Token } from '../../../core/storage/token';
+
 
 @Component({
   selector: 'app-drawer-menu',
@@ -14,15 +15,9 @@ import { UserService } from '../../../core/services/user.service';
 export class DrawerMenu implements OnInit {
   isAdmin = false;
 
-  constructor(private userService: UserService, private cdr: ChangeDetectorRef) { }
+  constructor(private token: Token) { }
 
   ngOnInit() {
-    this.userService.getMe().subscribe({
-      next: (user) => {
-        this.isAdmin = user.role === 1;
-        this.cdr.detectChanges();
-      }
-    });
+    this.isAdmin = this.token.getRole() === 1;
   }
-
 }

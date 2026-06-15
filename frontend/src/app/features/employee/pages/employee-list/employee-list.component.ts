@@ -1,15 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSortModule, Sort } from '@angular/material/sort';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { EmployeeService } from '../../services/employee.service';
 import { UserService } from '../../../../core/services/user.service';
@@ -17,6 +9,7 @@ import { ScheduleService } from '../../../schedule/services/schedule.service';
 import { Employee } from '../../models/employee.model';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { MaterialModule } from '../../../../shared/ui/materials-module';
 
 interface EmployeeWithSchedule extends Employee {
   scheduleName?: string;
@@ -25,11 +18,7 @@ interface EmployeeWithSchedule extends Employee {
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [
-    CommonModule, RouterModule, MatTableModule, MatButtonModule, MatIconModule,
-    MatSnackBarModule, MatButtonToggleModule, FormsModule,
-    MatInputModule, MatFormFieldModule, MatSortModule, MatTooltipModule
-  ],
+  imports: [CommonModule, RouterModule, FormsModule, MaterialModule],
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss']
 })

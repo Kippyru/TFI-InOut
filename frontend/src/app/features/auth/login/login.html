@@ -9,30 +9,36 @@
 </head>
 
 <body>
-    <div style="width:300px; margin:auto; margin-top:100px;">
+    <div class="login-page">
+        <div class="visual-panel">
+            <mat-icon>timer</mat-icon>
+            <h1>In<span>Out</span></h1>
+        </div>
 
-        <h2>Login</h2>
+        <mat-card class="login-card">
+            <mat-card-header>
+                <mat-card-title>Ingresar</mat-card-title>
+            </mat-card-header>
 
-        <input type="text" placeholder="Usuario" [(ngModel)]="username" />
+            <mat-card-content>
+                <mat-form-field appearance="outline">
+                    <mat-label>Usuario</mat-label>
+                    <input matInput [(ngModel)]="username" name="user">
+                </mat-form-field>
 
-        <br><br>
+                <mat-form-field appearance="outline">
+                    <mat-label>Contraseña</mat-label>
+                    <input matInput type="password" [(ngModel)]="password" name="pass">
+                </mat-form-field>
 
-        <input type="password" placeholder="Password" [(ngModel)]="password" />
+                @if (errorMessage()) {
+                <p class="error-msg">{{ errorMessage() }}</p>
+                }
 
-        <br><br>
-
-        <button (click)="login()">
-            Ingresar
-        </button>
-
-        <br><br>
-
-        <p style="color:red">
-            {{ errorMessage }}
-        </p>
-
+                <button mat-raised-button color="primary" (click)="login()">Ingresar</button>
+            </mat-card-content>
+        </mat-card>
     </div>
-
 </body>
 
 </html>

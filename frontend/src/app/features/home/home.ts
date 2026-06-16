@@ -1,64 +1,56 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, signal, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { TurnoConteo, EmpleadoCarga, EmpleadoPuntualidad, EmpleadoTardanza } from './model/home.model';
+import { DashboardService } from './home..service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, MatButtonModule, MatProgressBarModule],
+  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatProgressBarModule],
   templateUrl: './home.html',
   styleUrls: ['./home.scss']
 })
 export class Home implements OnInit {
-  // --- Métricas Generales ---
+  private dashboardService = inject(DashboardService);
+
+  // --- Signals ---
   totalEmpleadosActivos = signal<number>(0);
   turnosTrabajandoActualmente = signal<number>(0);
   turnosInactivos = signal<number>(0);
-
-  // --- Métricas por Turno ---
-  empleadosPorTurno = signal<{turno: string, cantidad: number}[]>([]);
-  turnoConMasEmpleados = signal<string>('');
-
-  // --- Rankings de Empleados (Carga Horaria) ---
-  empleadoMasCarga = signal<{nombre: string, horas: number} | null>(null);
-  empleadoMenosCarga = signal<{nombre: string, horas: number} | null>(null);
-
-  // --- Rankings de Puntualidad ---
-  empleadosMasPuntuales = signal<{nombre: string, porcentaje: number}[]>([]);
-  empleadosMasTardanzas = signal<{nombre: string, cantidad: number}[]>([]);
+  empleadosPorTurno = signal<TurnoConteo[]>([]);
+  turnoConMasEmpleados = signal<string>('N/A');
+  
+  // Nulos por defecto hasta que cargue el HTTP
+  empleadoMasCarga = signal<EmpleadoCarga | null>(null);
+  empleadoMenosCarga = signal<EmpleadoCarga | null>(null);
+  empleadosMasPuntuales = signal<EmpleadoPuntualidad[]>([]);
+  empleadosMasTardanzas = signal<EmpleadoTardanza[]>([]);
 
   ngOnInit() {
     this.cargarDatosDashboard();
   }
 
   cargarDatosDashboard() {
-    // Aquí harías la llamada a tu API (ej: this.dashboardService.getMetrics().subscribe(...))
-    // Datos simulados para visualizar el diseño:
-    this.totalEmpleadosActivos.set(120);
-    this.turnosTrabajandoActualmente.set(3);
-    this.turnosInactivos.set(1);
-    
-    this.empleadosPorTurno.set([
-      { turno: 'Mañana', cantidad: 50 },
-      { turno: 'Tarde', cantidad: 45 },
-      { turno: 'Noche', cantidad: 25 }
-    ]);
-    this.turnoConMasEmpleados.set('Mañana');
-
-    this.empleadoMasCarga.set({ nombre: 'Carlos Ruiz', horas: 48 });
-    this.empleadoMenosCarga.set({ nombre: 'Ana Gómez', horas: 20 });
-
-    this.empleadosMasPuntuales.set([
-      { nombre: 'Laura Martínez', porcentaje: 100 },
-      { nombre: 'Diego Fernández', porcentaje: 98 },
-      { nombre: 'Sofía Castro', porcentaje: 95 }
-    ]);
-
-    this.empleadosMasTardanzas.set([
-      { nombre: 'Juan Pérez', cantidad: 5 },
-      { nombre: 'Miguel Silva', cantidad: 3 }
-    ]);
+    this.dashboardService.getMetrics().subscribe({
+      next: (data) => {
+        // Actualizamos todos los signals con la respuesta de Spring Boot
+        this.totalEmpleadosActivos.set(data.totalEmpleadosActivos);
+        this.turnosTrabajandoActualmente.set(data.turnosTrabajandoActualmente);
+        this.turnosInactivos.set(data.turnosInactivos);
+        this.empleadosPorTurno.set(data.empleadosPorTurno);
+        this.turnoConMasEmpleados.set(data.turnoConMasEmpleados);
+        this.empleadoMasCarga.set(data.empleadoMasCarga);
+        this.empleadoMenosCarga.set(data.empleadoMenosCarga);
+        this.empleadosMasPuntuales.set(data.empleadosMasPuntuales);
+        this.empleadosMasTardanzas.set(data.empleadosMasTardanzas);
+      },
+      error: (err) => {
+        console.error('Error al cargar métricas del dashboard:', err);
+      }
+    });
   }
 }

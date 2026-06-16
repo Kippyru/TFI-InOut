@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface DetailScheduleRepository extends JpaRepository<DetailSchedule, Long> {
-    Optional<DetailSchedule> findByScheduleIdAndDay(Long scheduleId, String day);
+    Optional<DetailSchedule> findByScheduleIdAndDayIgnoreCase(Long scheduleId, String day);
     List<DetailSchedule> findByScheduleId(Long scheduleId);
 }

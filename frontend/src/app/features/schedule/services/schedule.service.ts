@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ScheduleDto, DetailScheduleDto, ScheduleEmployeeDto } from '../models/schedule.model';
+import { environment } from '../../../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScheduleService {
-  private apiUrl = 'http://localhost:8080/api/schedules'; // Ajustar si el mapping en backend es distinto
+  private apiUrl = `${environment.apiUrl}/schedules`; 
 
   constructor(private http: HttpClient) { }
 

@@ -3,14 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AttendanceStatusDto, EventAttendanceDto, DailyAttendanceDto } from '../models/attendance.model';
 import { Employee } from '../../employee/models/employee.model';
+import { environment } from '../../../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AttendanceService {
-  private attendanceUrl = 'http://localhost:8080/api/attendance';
-  private employeeUrl = 'http://localhost:8080/api/employees';
-  private adminAttendanceUrl = 'http://localhost:8080/api/admin/attendance';
+  private attendanceUrl = `${environment.apiUrl}/attendance`;
+  private employeeUrl = `${environment.apiUrl}/employees`;
+  private adminAttendanceUrl = `${environment.apiUrl}/admin/attendance`;
 
   constructor(private http: HttpClient) { }
 

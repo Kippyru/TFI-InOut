@@ -3,8 +3,7 @@ import {
   OnInit,
   OnDestroy,
   HostListener,
-  signal,
-  computed
+  signal
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { AttendanceService } from '../../services/attendance.service';
@@ -177,38 +176,52 @@ export class AttendanceClockComponent implements OnInit, OnDestroy {
     
     const parseTime = (timeStr: string | null | undefined): Date | null => {
       if (!timeStr) return null;
-      const [h, m, sec] = timeStr.split(':').map(Number);
+      // Extraemos solo la hora. Ignoramos los segundos si no son necesarios
+      const [h, m] = timeStr.split(':').map(Number);
       const d = new Date(now);
-      d.setHours(h, m, sec || 0, 0);
+      d.setHours(h, m, 0, 0);
       return d;
     };
 
-    const toleranceInMs = (s.checkInTolerance ?? 30) * 60 * 1000;
-    const toleranceOutMs = (s.checkOutTolerance ?? 30) * 60 * 1000;
+    const toleranceInMs = (s.checkInTolerance ?? 0) * 60 * 1000;
+    const toleranceOutMs = (s.checkOutTolerance ?? 0) * 60 * 1000;
 
     if (s.nextEvent === 'CHECK_IN' && s.scheduledCheckIn) {
       const scheduledIn = parseTime(s.scheduledCheckIn);
-      if (scheduledIn && now.getTime() < scheduledIn.getTime() - toleranceInMs) {
-        const allowedTime = new Date(scheduledIn.getTime() - toleranceInMs).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false });
-        this.scheduleWarning.set(`Tu turno empieza a las ${this.formatTime(s.scheduledCheckIn)}. Podés marcar entrada a partir de las ${allowedTime}.`);
-        this.scheduleWarningClass.set('error');
-        this.canRegister.set(false);
+      if (scheduledIn) {
+        const timeDiff = now.getTime() - scheduledIn.getTime();
+
+        // Demasiado temprano
+        if (timeDiff < -toleranceInMs) {
+          const allowedTime = new Date(scheduledIn.getTime() - toleranceInMs).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false });
+          this.scheduleWarning.set(`Tu turno empieza a las ${this.formatTime(s.scheduledCheckIn)}. Podés marcar entrada a partir de las ${allowedTime}.`);
+          this.scheduleWarningClass.set('error');
+          this.canRegister.set(false);
+        } 
+        // Demasiado tarde
+        else if (timeDiff > toleranceInMs) {
+          const limitTime = new Date(scheduledIn.getTime() + toleranceInMs).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false });
+          this.scheduleWarning.set(`El tiempo límite para registrar entrada expiró a las ${limitTime}.`);
+          this.scheduleWarningClass.set('error');
+          this.canRegister.set(false); // Bloqueamos el botón también si llega tarde
+        }
       }
     } else if (s.nextEvent === 'CHECK_OUT' && s.scheduledCheckOut) {
       const scheduledOut = parseTime(s.scheduledCheckOut);
-      if (scheduledOut && now.getTime() > scheduledOut.getTime() + toleranceOutMs) {
-        this.scheduleWarning.set(`Estás marcando salida fuera de la tolerancia de tu horario previsto (${this.formatTime(s.scheduledCheckOut)}).`);
-        this.scheduleWarningClass.set('warning');
-        // canRegister remains true
+      if (scheduledOut) {
+        // Validación similar para salidas anticipadas
+        if (now.getTime() < scheduledOut.getTime() - toleranceOutMs) {
+            const allowedTime = new Date(scheduledOut.getTime() - toleranceOutMs).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false });
+            this.scheduleWarning.set(`Aún es temprano para salir. Habilitado a partir de las ${allowedTime}.`);
+            this.scheduleWarningClass.set('error');
+            this.canRegister.set(false);
+        }
       }
     }
   }
 
-  // ── Parse backend error into friendly UX messages ──────────
+  // ── Parse backend error into UX messages ──────────
   private handleRegisterError(err: any): void {
-    // Backend returns: { error: { error: "message" } }
-    // err.error       → ErrorResponse wrapper object
-    // err.error.error → the Map<String,String>, which has key "error"
     const raw = err?.error?.error?.error;
     const backendMsg: string = typeof raw === 'string' ? raw : '';
 
@@ -223,7 +236,7 @@ export class AttendanceClockComponent implements OnInit, OnDestroy {
     }
 
     if (backendMsg.toLowerCase().includes('already checked')) {
-      // Already registered — show friendly message with last event time if available
+      // Already registered
       const lastTime = this.status()?.lastEvent
         ? ` (tu último registro fue a las ${this.formatTime(this.status()!.lastEvent!.hour)})`
         : '';

@@ -63,7 +63,6 @@ public class EventAttendanceService {
                 scheduledCheckIn = detail.getCheckIn();
                 scheduledCheckOut = detail.getCheckOut();
             } else {
-                //Si tiene turno asignado pero no trabaja este día en específico
                 hasSchedule = false;
             }
         }
@@ -100,7 +99,8 @@ public class EventAttendanceService {
             throw new BusinessException("Ya registraste tu " + (nextEvent.equals("CHECK_IN") ? "entrada" : "salida") + " de hoy.");
         }
 
-        validateTimeTolerance(status, nextEvent, now);
+        //Obtenemos el estado (PUNTUAL, TARDANZA, etc.) evaluando el horario
+        String attendanceState = validateAndDetermineState(status, nextEvent, now);
 
         EventAttendance attendance = new EventAttendance();
         attendance.setEmployee(employee);
@@ -108,27 +108,36 @@ public class EventAttendanceService {
         attendance.setHour(now);
         attendance.setDate(today);
         attendance.setDevice(device);
-        attendance.setState("ACTIVE"); // esto deberia sacarlo porq no se usa mas, ahora se usa active, pero no molesta
+
+        //Asignamos el estado real en lugar del string estático "ACTIVE"
+        attendance.setState(attendanceState);
 
         attendance = repository.save(attendance);
 
         return mapper.toDto(attendance);
     }
 
-    private void validateTimeTolerance(AttendanceStatusDto status, String nextEvent, LocalTime now) {
+    //Renombrado para reflejar que no solo valida, sino que calcula un estado de salida
+    private String validateAndDetermineState(AttendanceStatusDto status, String nextEvent, LocalTime now) {
         if ("CHECK_IN".equals(nextEvent) && status.getScheduledCheckIn() != null) {
             LocalTime scheduledIn = status.getScheduledCheckIn();
             int tolerance = status.getCheckInTolerance() != null ? status.getCheckInTolerance() : 0;
 
             LocalTime startWindow = scheduledIn.minusMinutes(tolerance);
-            LocalTime endWindow = scheduledIn.plusMinutes(tolerance);
+            LocalTime endPunctualWindow = scheduledIn.plusMinutes(tolerance);
 
+            // Bloqueamos si viene exageradamente temprano
             if (now.isBefore(startWindow)) {
                 throw new BusinessException("Aún es temprano. Puedes registrar tu entrada a partir de las " + startWindow);
             }
-            if (now.isAfter(endWindow)) {
-                throw new BusinessException("Tu tiempo de tolerancia para el ingreso ha expirado. (Límite: " + endWindow + ")");
+
+            // Si llega pasada la tolerancia, lo dejamos entrar pero queda la mancha en el historial
+            if (now.isAfter(endPunctualWindow)) {
+                return "TARDANZA";
             }
+
+            // Si llega en la ventana correcta
+            return "PUNTUAL";
         }
         else if ("CHECK_OUT".equals(nextEvent) && status.getScheduledCheckOut() != null) {
             LocalTime scheduledOut = status.getScheduledCheckOut();
@@ -139,10 +148,12 @@ public class EventAttendanceService {
             if (now.isBefore(startWindow)) {
                 throw new BusinessException("Aún no es horario de salida. Habilitado a partir de las " + startWindow);
             }
+            return "SALIDA";
         }
+
+        return "REGISTRADO";
     }
 
-    //determina el tipo de vento en base del historial del día en BD
     public String determineEventType(Long employeeId, LocalDate date) {
         Optional<EventAttendance> lastEventOpt = repository.findByEmployeeIdAndDate(employeeId, date).stream()
                 .max((e1, e2) -> e1.getHour().compareTo(e2.getHour()));
@@ -160,7 +171,6 @@ public class EventAttendanceService {
         return eventAttendanceMapper.toList(attendances);
     }
 
-    //Adapta el nombre del día de Java a español porq en el front esta en español...... habria que refactorizar el front
     private String getLocalizedDayOfWeek(LocalDate date) {
         return switch (date.getDayOfWeek()) {
             case MONDAY -> "Lunes";

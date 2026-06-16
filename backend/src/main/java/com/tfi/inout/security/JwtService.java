@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +16,10 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    // Key para testing. despues lo muevo al yam uwu
-    private static final String SECRET_KEY = "KeyTieneQueSerMayorA32DigitosSiNoNoAnda";
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24; // 24 horitas
+    @Value("${app.jwt.secret}")
+    private String SECRET_KEY;
+    @Value("${app.jwt.expiration}")
+    private long EXPIRATION_TIME;
 
     private Key getSignInKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());

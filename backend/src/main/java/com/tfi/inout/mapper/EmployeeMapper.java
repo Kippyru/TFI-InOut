@@ -4,10 +4,7 @@ import com.tfi.inout.dto.EmployeeDto;
 import com.tfi.inout.model.Employee;
 import com.tfi.inout.model.User;
 import com.tfi.inout.repository.UserRepository;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -32,6 +29,13 @@ public abstract class EmployeeMapper {
 
     public abstract List<EmployeeDto> toList(List<Employee> employeeList);
 
-    @Mapping(target = "user", source = "user", qualifiedByName = "mapIdToUser")
-    public abstract void updateEmployee(EmployeeDto employeeDto, @MappingTarget Employee employee);
+    @BeanMapping(                                                   // esto es para ignorar el usuario cuando se actualiza
+            nullValuePropertyMappingStrategy =                      // el empleado, asi no quiera hacer null la fk
+                    NullValuePropertyMappingStrategy.IGNORE
+    )
+    @Mapping(target = "numberEmployee", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    public abstract void updateEmployee(
+            EmployeeDto employeeDto,
+            @MappingTarget Employee employee);
 }

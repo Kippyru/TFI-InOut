@@ -3,8 +3,8 @@ spring:
     name: inout
 
   datasource:
-    url: jdbc:mariadb://localhost:27017/TFI
-    username: root
+    url: jdbc:mariadb://mariadb:3306/TFI
+    username: tfi
     password: 1234
     driver-class-name: org.mariadb.jdbc.Driver
 
@@ -31,3 +31,6 @@ app:
   admin:
     username: admin
     password: 1234
+  jwt:
+    secret: ${JWT_SECRET:KeyTieneQueSerMayorA32DigitosSiNoNoAnda}
+    expiration: ${JWT_EXPIRATION:3600000}

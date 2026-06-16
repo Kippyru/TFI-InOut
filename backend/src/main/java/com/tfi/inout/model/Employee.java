@@ -5,13 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "employee", indexes = @Index(columnList = "active"))
-@SQLRestriction("active = true")
+// @SQLRestriction("active = true") - es muy agresiva esta restriccion... quien lo hubiera dicho...
 public class Employee extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class Employee extends BaseEntity {
     private String state;
 
     @Column(name = "date_entry")
-    private LocalDateTime dateEntry;
+    private LocalDate dateEntry;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

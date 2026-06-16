@@ -1,0 +1,22 @@
+<mat-nav-list>
+  <a mat-list-item routerLink="/dashboard/home" routerLinkActive="active-link" *ngIf="isAdmin">
+    <mat-icon matListItemIcon>home</mat-icon>
+    <span matListItemTitle>Inicio</span>
+  </a>
+  <a mat-list-item routerLink="/dashboard/employee" routerLinkActive="active-link" *ngIf="isAdmin">
+    <mat-icon matListItemIcon>people</mat-icon>
+    <span matListItemTitle>Empleados</span>
+  </a>
+  <a mat-list-item routerLink="/dashboard/schedule" routerLinkActive="active-link" *ngIf="isAdmin">
+    <mat-icon matListItemIcon>schedule</mat-icon>
+    <span matListItemTitle>Turnos</span>
+  </a>
+  <a mat-list-item routerLink="/dashboard/attendance" routerLinkActive="active-link">
+    <mat-icon matListItemIcon>fingerprint</mat-icon>
+    <span matListItemTitle>Asistencia</span>
+  </a>
+  <a mat-list-item routerLink="/dashboard/attendance/audit" routerLinkActive="active-link" *ngIf="isAdmin">
+    <mat-icon matListItemIcon>rule</mat-icon>
+    <span matListItemTitle>Auditoría Asistencia</span>
+  </a>
+</mat-nav-list>

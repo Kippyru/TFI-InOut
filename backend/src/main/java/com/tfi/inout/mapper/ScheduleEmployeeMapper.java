@@ -13,5 +13,6 @@ public interface ScheduleEmployeeMapper {
 
     @Mapping(source = "employee.id", target = "employeeId")
     @Mapping(source = "schedule.id", target = "scheduleId")
+    @Mapping(source = "schedule.name", target = "scheduleName")
     ScheduleEmployeeDto toDto(ScheduleEmployee entity);
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>InOut</title>
+</head>
+
+<body>
+    <mat-toolbar>
+        <button matIconButton class="example-icon" aria-label="Example icon-button with menu icon" matTooltip="Menu"
+            matTooltipPosition="below" (click)="drawer.toggle()">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <span>InOut</span>
+        <span class="example-spacer"></span>
+
+        <button matIconButton class="example-icon" aria-label="LogOut " matTooltip="LogOut" matTooltipPosition="below"
+            (click)="logout()">
+            <mat-icon>logout</mat-icon>
+        </button>
+    </mat-toolbar>
+
+    <mat-drawer-container class="example-container">
+        <mat-drawer mode="side" opened #drawer
+        [mode]="isMobile() ? 'over' : 'side' "
+        [opened]="!isMobile()"
+        position="start"
+        >
+            <app-drawer-menu />
+        </mat-drawer>
+        <mat-drawer-content style="padding: 5px" ;>
+            <router-outlet />
+        </mat-drawer-content>
+    </mat-drawer-container>
+
+</body>
+
+</html>

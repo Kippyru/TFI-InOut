@@ -24,10 +24,7 @@ public class EmployeeDto {
     private String cuil;
     private String dni;
     private String state;
-
-    @NotNull(message = "La fecha de entrada es obligatoria")
     private LocalDate dateEntry;
-
-    @NotNull(message = "El usuario asociado es obligatorio")
     private Long user;
+    private Boolean active;
 }

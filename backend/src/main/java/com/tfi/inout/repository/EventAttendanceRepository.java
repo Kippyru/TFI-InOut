@@ -13,4 +13,6 @@ public interface EventAttendanceRepository extends JpaRepository<EventAttendance
     List<EventAttendance> findByEmployeeIdAndDate(Long employeeId, LocalDate date);
 
     Optional<EventAttendance> findByEmployeeIdAndDateAndEventType(Long employeeId, LocalDate date, String eventType);
+
+    List<EventAttendance> findByDate(LocalDate date);
 }

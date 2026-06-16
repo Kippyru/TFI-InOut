@@ -2,19 +2,24 @@ package com.tfi.inout.service;
 
 import com.tfi.inout.dto.AuditAttendanceDto;
 import com.tfi.inout.mapper.AuditAttendanceMapper;
-import com.tfi.inout.model.AuditAttendance;
-import com.tfi.inout.model.EventAttendance;
-import com.tfi.inout.model.User;
+import com.tfi.inout.model.*;
 import com.tfi.inout.repository.AuditAttendanceRepository;
+import com.tfi.inout.repository.EmployeeRepository;
 import com.tfi.inout.repository.EventAttendanceRepository;
+import com.tfi.inout.repository.ScheduleEmployeeRepository;
 import com.tfi.inout.repository.UserRepository;
 import com.tfi.inout.handler.ResourceNotFoundException;
+import com.tfi.inout.dto.DailyAttendanceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.Instant;
 import java.time.LocalTime;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +27,8 @@ public class AuditAttendanceService {
     private final AuditAttendanceRepository auditRepository;
     private final EventAttendanceRepository eventRepository;
     private final UserRepository userRepository;
+    private final EmployeeRepository employeeRepository;
+    private final ScheduleEmployeeRepository scheduleEmployeeRepository;
     private final AuditAttendanceMapper mapper;
 
     @Transactional
@@ -35,7 +42,7 @@ public class AuditAttendanceService {
         
         AuditAttendance audit = new AuditAttendance();
         audit.setAdmin(admin);
-        audit.setEvent_attendance(event);
+        audit.setEventAttendance(event);
         audit.setPreviousValue(previousValue);
         audit.setNewValue(newValue);
         audit.setDate(Instant.now());
@@ -45,5 +52,116 @@ public class AuditAttendanceService {
         eventRepository.save(event);
 
         return mapper.toDto(auditRepository.save(audit));
+    }
+
+    @Transactional(readOnly = true)
+    public List<DailyAttendanceDto> getDailyAttendance(LocalDate date) {
+
+        List<Employee> employees =
+                employeeRepository.findByActiveTrue(1);
+
+        List<EventAttendance> attendances =
+                eventRepository.findByDate(date);
+
+        List<ScheduleEmployee> schedules =
+                scheduleEmployeeRepository.findActiveSchedulesByDate(date);
+
+        Map<Long, List<EventAttendance>> attendanceMap =
+                attendances.stream()
+                        .collect(Collectors.groupingBy(
+                                a -> a.getEmployee().getId()
+                        ));
+
+        Map<Long, ScheduleEmployee> scheduleMap =
+                schedules.stream()
+                        .collect(Collectors.toMap(
+                                se -> se.getEmployee().getId(),
+                                Function.identity(),
+                                (first, second) -> first
+                        ));
+
+        List<DailyAttendanceDto> result = new ArrayList<>();
+
+        List<Long> attendanceIds = attendances.stream()
+                .map(EventAttendance::getId)
+                .toList();
+
+        List<AuditAttendance> audits =
+                attendanceIds.isEmpty()
+                        ? Collections.emptyList()
+                        : auditRepository.findByEventAttendanceIds(attendanceIds);
+
+        Map<Long, AuditAttendance> auditMap =
+                audits.stream()
+                        .collect(Collectors.toMap(
+                                a -> a.getEventAttendance().getId(),
+                                Function.identity(),
+                                (a1, a2) ->
+                                        a1.getDate().isAfter(a2.getDate())
+                                                ? a1
+                                                : a2
+                        ));
+
+        for (Employee employee : employees) {
+
+            DailyAttendanceDto dto = new DailyAttendanceDto();
+
+            dto.setEmployeeId(employee.getId());
+            dto.setNumberEmployee(employee.getNumberEmployee());
+            dto.setEmployeeName(employee.getName());
+            dto.setEmployeeLastName(employee.getLastName());
+
+            ScheduleEmployee schedule =
+                    scheduleMap.get(employee.getId());
+
+            dto.setScheduleName(
+                    schedule != null
+                            ? schedule.getSchedule().getName()
+                            : "Sin turno"
+            );
+
+            List<EventAttendance> employeeEvents =
+                    attendanceMap.getOrDefault(
+                            employee.getId(),
+                            Collections.emptyList()
+                    );
+
+            Optional<EventAttendance> checkIn =
+                    employeeEvents.stream()
+                            .filter(e -> "CHECK_IN".equals(e.getEventType()))
+                            .min(Comparator.comparing(EventAttendance::getHour));
+
+            Optional<EventAttendance> checkOut =
+                    employeeEvents.stream()
+                            .filter(e -> "CHECK_OUT".equals(e.getEventType()))
+                            .max(Comparator.comparing(EventAttendance::getHour));
+
+            checkIn.ifPresent(e -> {
+                dto.setCheckInTime(e.getHour());
+                dto.setCheckInEventId(e.getId());
+
+                AuditAttendance audit = auditMap.get(e.getId());
+
+                if (audit != null) {
+                    dto.setReason(audit.getReason());
+                }
+            });
+
+            checkOut.ifPresent(e -> {
+                dto.setCheckOutTime(e.getHour());
+                dto.setCheckOutEventId(e.getId());
+
+                AuditAttendance audit = auditMap.get(e.getId());
+
+                if (audit != null) {
+                    dto.setReason(audit.getReason());
+                    dto.setDate(audit.getDate());
+                }
+            });
+
+            result.add(dto);
+        }
+
+        return result;
     }
 }

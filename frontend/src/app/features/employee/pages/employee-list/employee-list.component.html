@@ -1,0 +1,110 @@
+<div class="employee-list-container">
+  <div class="header">
+    <h2>Empleados</h2>
+    <div class="actions-header">
+      <mat-button-toggle-group [(ngModel)]="filterStatus" (change)="applyFilter()" class="filter-toggle">
+        <mat-button-toggle value="todos">Todos</mat-button-toggle>
+        <mat-button-toggle value="activos">Activos</mat-button-toggle>
+        <mat-button-toggle value="inactivos">Inactivos</mat-button-toggle>
+      </mat-button-toggle-group>
+      <button mat-raised-button color="primary" routerLink="create">
+        <mat-icon>add</mat-icon> Agregar Empleado
+      </button>
+    </div>
+  </div>
+
+  <!-- Search bar -->
+  <div class="search-bar">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar empleado o turno...</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="searchQuery" (input)="applyFilter()" placeholder="Nombre, apellido, legajo, turno...">
+      <button mat-icon-button matSuffix *ngIf="searchQuery" (click)="searchQuery=''; applyFilter()" matTooltip="Limpiar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <table mat-table [dataSource]="filteredEmployees" class="mat-elevation-z8 employee-table">
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef class="sortable-header" (click)="onSort('id')">
+        ID <mat-icon class="sort-icon">{{getSortIcon('id')}}</mat-icon>
+      </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Nombre </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <!-- Last Name Column -->
+    <ng-container matColumnDef="lastName">
+      <th mat-header-cell *matHeaderCellDef> Apellido </th>
+      <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+    </ng-container>
+
+    <!-- Number Column -->
+    <ng-container matColumnDef="numberEmployee">
+      <th mat-header-cell *matHeaderCellDef class="sortable-header" (click)="onSort('numberEmployee')">
+        N° Empleado <mat-icon class="sort-icon">{{getSortIcon('numberEmployee')}}</mat-icon>
+      </th>
+      <td mat-cell *matCellDef="let element"> {{element.numberEmployee}} </td>
+    </ng-container>
+
+    <!-- Schedule Column -->
+    <ng-container matColumnDef="scheduleName">
+      <th mat-header-cell *matHeaderCellDef class="sortable-header" (click)="onSort('scheduleName')">
+        Turno <mat-icon class="sort-icon">{{getSortIcon('scheduleName')}}</mat-icon>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span class="schedule-badge" [class.no-schedule]="element.scheduleName === '—'">
+          {{element.scheduleName}}
+        </span>
+      </td>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="active">
+      <th mat-header-cell *matHeaderCellDef> Estado </th>
+      <td mat-cell *matCellDef="let element">
+        <span [class.active]="element.active == 1 || element.active === true || element.active === '1'" 
+              [class.inactive]="element.active == 0 || element.active === false || element.active === '0'">
+          {{ (element.active == 1 || element.active === true || element.active === '1') ? 'Activo' : 'Inactivo' }}
+        </span>
+      </td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button color="primary" [routerLink]="[element.id]" matTooltip="Ver">
+          <mat-icon>visibility</mat-icon>
+        </button>
+        <button mat-icon-button color="accent" [routerLink]="[element.id, 'edit']" matTooltip="Editar">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" *ngIf="element.active == 1 || element.active === true || element.active === '1'" (click)="deleteEmployee(element)"
+          matTooltip="Dar de baja">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-icon-button class="restore-btn" *ngIf="element.active == 0 || element.active === false || element.active === '0'" (click)="restoreEmployee(element)"
+          matTooltip="Restaurar">
+          <mat-icon>restore</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <div *ngIf="filteredEmployees.length === 0" class="no-results">
+    <mat-icon>search_off</mat-icon>
+    <p>No se encontraron empleados con ese criterio.</p>
+  </div>
+</div>

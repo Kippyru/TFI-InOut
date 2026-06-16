@@ -20,7 +20,7 @@ public class AuditAttendance extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_attendance_id")
-    private EventAttendance event_attendance;
+    private EventAttendance eventAttendance;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id")

@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Auditar Horario de {{data.eventType}}</h2>
+
+<mat-dialog-content>
+  <p class="subtitle">Horario registrado actual: <strong>{{data.currentValue | slice:0:5}}</strong></p>
+
+  <div class="form-container">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nuevo Horario</mat-label>
+      <input matInput type="time" [(ngModel)]="newValue" required>
+      <mat-error>Requerido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Motivo de la corrección</mat-label>
+      <textarea matInput [(ngModel)]="reason" rows="3" required placeholder="Ej: Fichaje omitido por error del sistema"></textarea>
+      <mat-error>Requerido</mat-error>
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="loading">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="loading || !newValue || !reason">
+    <span *ngIf="!loading">Guardar Cambios</span>
+    <span *ngIf="loading">Guardando...</span>
+  </button>
+</mat-dialog-actions>

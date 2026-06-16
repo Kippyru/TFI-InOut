@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../../../shared/ui/materials-module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -19,42 +19,43 @@ import { ScheduleDto, ScheduleEmployeeDto } from '../../../schedule/models/sched
 })
 export class AssignScheduleDialogComponent implements OnInit {
   assignForm: FormGroup;
-  schedules: ScheduleDto[] = [];
-  loading = false;
-  loadingSchedules = true;
+
+  // ── Signals para el manejo de estado ──
+  schedules = signal<ScheduleDto[]>([]);
+  loading = signal(false);
+  loadingSchedules = signal(true);
 
   constructor(
     private fb: FormBuilder,
     private scheduleService: ScheduleService,
     private dialogRef: MatDialogRef<AssignScheduleDialogComponent>,
-    private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: { employeeId: number; employeeName: string }
   ) {
     this.assignForm = this.fb.group({
       scheduleId: ['', Validators.required],
       startDate: ['', Validators.required],
-      endDate: ['']
+      endDate: [''] // Es opcional según tu lógica
     });
   }
 
   ngOnInit(): void {
     this.scheduleService.listSchedules().subscribe({
       next: (data) => {
-        // Only active schedules can be assigned ideally, but we'll show all or filter here
-        this.schedules = data.filter(s => s.active === true);
-        this.loadingSchedules = false;
-        this.cdr.detectChanges();
+        // Corrección del bug: Evaluación más flexible por si llega como string 'true' o truthy
+        const activeSchedules = data.filter(s => s.active === true || String(s.active) === 'true');
+        this.schedules.set(activeSchedules);
+        this.loadingSchedules.set(false);
       },
       error: (err) => {
         console.error('Error loading schedules', err);
-        this.loadingSchedules = false;
+        this.loadingSchedules.set(false);
       }
     });
   }
 
   onSubmit(): void {
     if (this.assignForm.valid) {
-      this.loading = true;
+      this.loading.set(true);
       const formValue = this.assignForm.value;
 
       const assignment: ScheduleEmployeeDto = {
@@ -69,12 +70,12 @@ export class AssignScheduleDialogComponent implements OnInit {
 
       this.scheduleService.assignSchedule(assignment).subscribe({
         next: (res) => {
-          this.loading = false;
+          this.loading.set(false);
           this.dialogRef.close(res);
         },
         error: (err) => {
           console.error('Error assigning schedule', err);
-          this.loading = false;
+          this.loading.set(false);
           alert('Hubo un error al asignar el turno.');
         }
       });
@@ -86,6 +87,7 @@ export class AssignScheduleDialogComponent implements OnInit {
   }
 
   private formatDate(date: Date): string {
+    if (!date) return '';
     const d = new Date(date);
     let month = '' + (d.getMonth() + 1);
     let day = '' + d.getDate();

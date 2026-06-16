@@ -32,7 +32,7 @@ export class ScheduleFormComponent implements OnInit {
       hourWork: [0, [Validators.required, Validators.min(1)]],
       checkInTolerance: [0, [Validators.required, Validators.min(0)]],
       checkOutTolerance: [0, [Validators.required, Validators.min(0)]],
-      state: ['ACTIVO']
+      active: [1]
     });
   }
 

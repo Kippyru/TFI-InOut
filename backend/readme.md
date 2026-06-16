@@ -1,14 +1,9 @@
-## Configuracion de Inicio
-En root del proyecto, osea aca.. donde esta este readme, levantar docker con:  
-docker compose up -d
+## BackEnd
 
-para listar el contenedor y ver el status:  
-docker ps -a
-
-pueden probar conectarse por workbench y deberia andar  
-user: root  
+Para ver la db desde workbench pueden probar conectarse por: 
+user: root    
 pass: 1234  
-port: 27017
+port: 3306
 
 Cuando se hace "docker compose up" se crean solo los roles ADMIN y EMPLOYEE, ademas de un usuario administrador  
 

@@ -23,3 +23,17 @@ Agregue Customs Cors porq si no Angular le da problemas...
 Saque la limitacion sql de employee, agrege para que el numero de legajo se haga automaticamente, e hice cambios en el 
 mapper de employee y user para ignorar ciertos campos a la hora de actualizar los datos. Tambien se agrego para que 
 la fecha de creacion del empleado sea automatica  
+
+- 11062026  
+Hice unos dto para attendance, asi el front sabe el status general y el daily del empleado tambien modifique un par de 
+servicion y repositorios  
+
+- 13062026  
+Muchos cambios en el service de attendance, ahora deberia andar bien, antes no tenia en cuanta ciertas cosas como
+si el empleado tenia o no un turno para ese dia ni el horario en el que puede hacer el checkin o check out  
+
+- 15062026  
+Implemente unos dto para metricas asi como su repositorio, servicio y controlador  
+
+- 16062026  
+Dockerice por completo el trabajo

@@ -1,6 +1,7 @@
 package com.tfi.inout.controller;
 
-import com.tfi.inout.dto.DetailScheduleDto;
+import com.tfi.inout.dto.request.DetailScheduleRequestDto;
+import com.tfi.inout.dto.response.DetailScheduleResponseDto;
 import com.tfi.inout.service.DetailScheduleService;
 import lombok.RequiredArgsConstructor;
 import jakarta.validation.Valid;
@@ -15,7 +16,7 @@ public class DetailScheduleController {
     private final DetailScheduleService detailScheduleService;
 
     @PutMapping("/{id}")
-    public ResponseEntity<DetailScheduleDto> updateDetail(@PathVariable Long id, @Valid @RequestBody DetailScheduleDto dto) {
+    public ResponseEntity<DetailScheduleResponseDto> updateDetail(@PathVariable Long id, @Valid @RequestBody DetailScheduleRequestDto dto) {
         return ResponseEntity.ok(detailScheduleService.update(id, dto));
     }
 

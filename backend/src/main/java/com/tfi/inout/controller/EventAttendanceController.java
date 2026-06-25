@@ -1,7 +1,7 @@
 package com.tfi.inout.controller;
 
 import com.tfi.inout.dto.AttendanceStatusDto;
-import com.tfi.inout.dto.EventAttendanceDto;
+import com.tfi.inout.dto.response.EventAttendanceResponseDto;
 import com.tfi.inout.service.EventAttendanceService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class EventAttendanceController {
     }
 
     @PostMapping("/{employeeId}")
-    public ResponseEntity<EventAttendanceDto> register(
+    public ResponseEntity<EventAttendanceResponseDto> register(
             @PathVariable Long employeeId,
             @RequestParam @NotBlank(message = "El dispositivo es obligatorio") String device
     ) {
@@ -38,7 +38,7 @@ public class EventAttendanceController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<EventAttendanceDto>> list(
+    public ResponseEntity<List<EventAttendanceResponseDto>> list(
             @RequestParam(required = false) LocalDate date) {
         return ResponseEntity.ok(service.list(date));
     }

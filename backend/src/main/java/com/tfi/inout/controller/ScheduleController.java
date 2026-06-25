@@ -1,8 +1,11 @@
 package com.tfi.inout.controller;
 
-import com.tfi.inout.dto.DetailScheduleDto;
-import com.tfi.inout.dto.ScheduleDto;
-import com.tfi.inout.dto.ScheduleEmployeeDto;
+import com.tfi.inout.dto.request.DetailScheduleRequestDto;
+import com.tfi.inout.dto.request.ScheduleRequestDto;
+import com.tfi.inout.dto.request.ScheduleEmployeeRequestDto;
+import com.tfi.inout.dto.response.DetailScheduleResponseDto;
+import com.tfi.inout.dto.response.ScheduleResponseDto;
+import com.tfi.inout.dto.response.ScheduleEmployeeResponseDto;
 import com.tfi.inout.service.DetailScheduleService;
 import com.tfi.inout.service.ScheduleEmployeeService;
 import com.tfi.inout.service.ScheduleService;
@@ -24,20 +27,20 @@ public class ScheduleController {
     private final DetailScheduleService detailScheduleService;
 
     @PostMapping
-    public ResponseEntity<ScheduleDto> createSchedule(@Valid @RequestBody ScheduleDto dto) {
+    public ResponseEntity<ScheduleResponseDto> createSchedule(@Valid @RequestBody ScheduleRequestDto dto) {
         return ResponseEntity.ok(scheduleService.createSchedule(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<ScheduleDto>> listSchedules() {
+    public ResponseEntity<List<ScheduleResponseDto>> listSchedules() {
         return ResponseEntity.ok(scheduleService.listSchedules());
     }
 
     @GetMapping("/list/{id}")
-    public ScheduleDto getSchedule(@PathVariable Long id) { return scheduleService.listId(id);}
+    public ScheduleResponseDto getSchedule(@PathVariable Long id) { return scheduleService.listId(id);}
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateSchedule(@PathVariable Long id, @Valid @RequestBody ScheduleDto dto) {
+    public ResponseEntity<String> updateSchedule(@PathVariable Long id, @Valid @RequestBody ScheduleRequestDto dto) {
         scheduleService.edit(id, dto);
         return ResponseEntity.ok("Schedule updated");
     }
@@ -48,34 +51,29 @@ public class ScheduleController {
         return ResponseEntity.ok("Schedule successfully restored");
     }
 
-    @GetMapping("/{id}/details")
-    public ResponseEntity<List<DetailScheduleDto>> getDetails(@PathVariable Long id) {
-        return ResponseEntity.ok(detailScheduleService.getDetailsBySchedule(id));
-    }
-
     @PostMapping("/{id}/details")
-    public ResponseEntity<DetailScheduleDto> addDetail(@PathVariable Long id, @Valid @RequestBody DetailScheduleDto dto) {
+    public ResponseEntity<DetailScheduleResponseDto> addDetail(@PathVariable Long id, @Valid @RequestBody DetailScheduleRequestDto dto) {
         return ResponseEntity.ok(detailScheduleService.addDetailToSchedule(id, dto));
     }
 
     @PostMapping("/{id}/details/bulk")
-    public ResponseEntity<List<DetailScheduleDto>> addDetailsBulk(@PathVariable Long id, @Valid @RequestBody List<DetailScheduleDto> dtos) {
+    public ResponseEntity<List<DetailScheduleResponseDto>> addDetailsBulk(@PathVariable Long id, @Valid @RequestBody List<DetailScheduleRequestDto> dtos) {
         return ResponseEntity.ok(detailScheduleService.createBulk(id, dtos));
     }
 
     @PostMapping("/assign")
-    public ResponseEntity<ScheduleEmployeeDto> assignSchedule(@Valid @RequestBody ScheduleEmployeeDto dto) {
+    public ResponseEntity<ScheduleEmployeeResponseDto> assignSchedule(@Valid @RequestBody ScheduleEmployeeRequestDto dto) {
         return ResponseEntity.ok(scheduleEmployeeService.assignSchedule(dto));
     }
 
     @GetMapping("/employee/{employeeId}/active")
-    public ResponseEntity<ScheduleEmployeeDto> getActiveScheduleForEmployee(@PathVariable Long employeeId) {
-        Optional<ScheduleEmployeeDto> result = scheduleEmployeeService.getActiveScheduleForEmployee(employeeId);
+    public ResponseEntity<ScheduleEmployeeResponseDto> getActiveScheduleForEmployee(@PathVariable Long employeeId) {
+        Optional<ScheduleEmployeeResponseDto> result = scheduleEmployeeService.getActiveScheduleForEmployee(employeeId);
         return result.map(ResponseEntity::ok).orElse(ResponseEntity.noContent().build());
     }
 
     @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<List<ScheduleEmployeeDto>> getAllSchedulesForEmployee(@PathVariable Long employeeId) {
+    public ResponseEntity<List<ScheduleEmployeeResponseDto>> getAllSchedulesForEmployee(@PathVariable Long employeeId) {
         return ResponseEntity.ok(scheduleEmployeeService.getAllSchedulesForEmployee(employeeId));
     }
 

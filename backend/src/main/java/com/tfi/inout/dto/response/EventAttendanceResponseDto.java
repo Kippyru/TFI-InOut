@@ -1,6 +1,5 @@
-package com.tfi.inout.dto;
+package com.tfi.inout.dto.response;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,12 +10,9 @@ import java.time.LocalTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventAttendanceDto {
+public class EventAttendanceResponseDto {
     private Long id;
-
-    @NotNull(message = "El empleado es obligatorio")
     private Long employee;
-
     private String eventType;
     private LocalTime hour;
     private LocalDate date;

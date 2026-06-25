@@ -1,4 +1,4 @@
-package com.tfi.inout.dto;
+package com.tfi.inout.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.tfi.inout.dto;
+package com.tfi.inout.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,10 +11,7 @@ import java.time.LocalTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DetailScheduleDto {
-    private Long id;
-
-    @NotNull(message = "El ID del horario es obligatorio")
+public class DetailScheduleRequestDto {
     private Long scheduleId;
 
     @NotBlank(message = "El día es obligatorio")

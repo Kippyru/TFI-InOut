@@ -37,3 +37,15 @@ Implemente unos dto para metricas asi como su repositorio, servicio y controlado
 
 - 16062026  
 Dockerice por completo el trabajo
+
+- 20062026  
+Elimine TODA las inyecciónes de campo e implemente inyección en el constructor  
+y arregle User, para que cumpla con mvc y solid, actualizando asi tambien como se extrae el rol  
+
+- 21062026  
+Aplique el patrón Interface + Impl en los Services  
+
+- 22062026  
+Separe DTOs en paquetes de Request y Response añadiendo asi DTOs especificos para todas las entidades 
+y actualice todos los mappers y los controllers para que funcionen con estos nuevos DTOss
+

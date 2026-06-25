@@ -24,6 +24,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     Optional<Employee> findByUserId(Long userId);
 
-    List<Employee> findByActiveTrue(int active);
+    List<Employee> findByActiveTrue();
 
 }

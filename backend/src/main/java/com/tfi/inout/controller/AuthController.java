@@ -30,7 +30,6 @@ public class AuthController {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
-
         final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
 
         Map<String, Object> extraClaims = new HashMap<>();

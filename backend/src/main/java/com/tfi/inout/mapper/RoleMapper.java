@@ -1,8 +1,10 @@
 package com.tfi.inout.mapper;
 
-import com.tfi.inout.dto.RoleDto;
+import com.tfi.inout.dto.request.RoleRequestDto;
+import com.tfi.inout.dto.response.RoleResponseDto;
 import com.tfi.inout.model.Role;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
@@ -10,11 +12,17 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface RoleMapper {
 
-    Role toEntity(RoleDto roleDto);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "active", ignore = true)
+    @Mapping(target = "deletedAt", ignore = true)
+    Role toEntity(RoleRequestDto roleRequestDto);
 
-    RoleDto toDto(Role role);
+    RoleResponseDto toDto(Role role);
 
-    List<RoleDto> toList(List<Role> roles);
+    List<RoleResponseDto> toList(List<Role> roles);
 
-    void updateRole(RoleDto roleDto, @MappingTarget Role role);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "active", ignore = true)
+    @Mapping(target = "deletedAt", ignore = true)
+    void updateRole(RoleRequestDto roleRequestDto, @MappingTarget Role role);
 }

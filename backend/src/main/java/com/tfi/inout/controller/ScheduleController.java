@@ -51,6 +51,11 @@ public class ScheduleController {
         return ResponseEntity.ok("Schedule successfully restored");
     }
 
+    @GetMapping("/{id}/details")
+    public ResponseEntity<List<DetailScheduleResponseDto>> getDetails(@PathVariable Long id) {
+        return ResponseEntity.ok(detailScheduleService.getDetailsBySchedule(id));
+    }
+
     @PostMapping("/{id}/details")
     public ResponseEntity<DetailScheduleResponseDto> addDetail(@PathVariable Long id, @Valid @RequestBody DetailScheduleRequestDto dto) {
         return ResponseEntity.ok(detailScheduleService.addDetailToSchedule(id, dto));

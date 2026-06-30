@@ -25,4 +25,12 @@ Detalles de turnos y asignación de turno los detalles de los empleados
 - 14062026  
 Página de attendance: check-in y check-out de empleados  
 - 16062026  
-Métricas en la página principal del dashboard y dockerizacionnn
+Métricas en la página principal del dashboard y dockerizacionnn  
+- 23062026  
+Reestructuración de arquitectura al modelo Feature, Core, Shared (Dashboard, Auth, Home). Refactorización a Signals completos en componentes
+- 25062026  
+Agregue pagina configuracion con modo oscuro, limpie y borre archivos que no se usan 
+- 26062026  
+Agregue selector de tema y ademas elimine estilos que estaban hardcodeados
+- 27062026  
+Agregue selector de idioma español/ingles en la pagina de configuracion

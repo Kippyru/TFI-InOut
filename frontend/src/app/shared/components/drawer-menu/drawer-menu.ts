@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../../ui/materials-module';
 import { Token } from '../../../core/storage/token';
+import { TranslationService } from '../../../core/services/translation.service';
 
 
 @Component({
@@ -14,8 +15,11 @@ import { Token } from '../../../core/storage/token';
 })
 export class DrawerMenu implements OnInit {
   isAdmin = false;
+  t!: (key: string) => string;
 
-  constructor(private token: Token) { }
+  constructor(private token: Token, private translationService: TranslationService) {
+    this.t = this.translationService.translate.bind(this.translationService);
+  }
 
   ngOnInit() {
     this.isAdmin = this.token.getRole() === 1;

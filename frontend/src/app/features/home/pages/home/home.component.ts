@@ -4,18 +4,21 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { TurnoConteo, EmpleadoCarga, EmpleadoPuntualidad, EmpleadoTardanza } from './model/home.model';
-import { DashboardService } from './home..service';
+import { TurnoConteo, EmpleadoCarga, EmpleadoPuntualidad, EmpleadoTardanza } from '../../models/home.model';
+import { DashboardService } from '../../services/home.service';
+import { TranslationService } from '../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatProgressBarModule],
-  templateUrl: './home.html',
-  styleUrls: ['./home.scss']
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss']
 })
 export class Home implements OnInit {
   private dashboardService = inject(DashboardService);
+  private translationService = inject(TranslationService);
+  t = this.translationService.translate.bind(this.translationService);
 
   // --- Signals ---
   totalEmpleadosActivos = signal<number>(0);

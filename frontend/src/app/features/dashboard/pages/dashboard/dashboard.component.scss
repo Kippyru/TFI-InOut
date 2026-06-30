@@ -18,6 +18,6 @@ mat-toolbar {
 }
 
 mat-drawer {
-  border-right: 1px solid #c4c6d0;
+  border-right: 1px solid var(--mat-sys-outline-variant, #c4c6d0);
   border-radius: 0 !important;
 }

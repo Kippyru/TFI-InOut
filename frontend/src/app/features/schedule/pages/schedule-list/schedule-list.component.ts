@@ -9,6 +9,7 @@ import { ScheduleDetailDialogComponent } from '../../components/schedule-detail-
 import { ScheduleDetailsListDialogComponent } from '../../components/schedule-details-list-dialog/schedule-details-list-dialog.component';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { TranslationService } from '../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-schedule-list',
@@ -26,12 +27,16 @@ export class ScheduleListComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<ScheduleDto>();
   displayedColumns: string[] = ['id', 'name', 'hourWork', 'tolerances', 'active', 'actions'];
   loading = true;
+  t!: (key: string) => string;
 
   constructor(
     private scheduleService: ScheduleService,
     private dialog: MatDialog,
-    private cdr: ChangeDetectorRef
-  ) { }
+    private cdr: ChangeDetectorRef,
+    private translationService: TranslationService
+  ) {
+    this.t = this.translationService.translate.bind(this.translationService);
+  }
 
   ngOnInit(): void {
     this.loadSchedules();
@@ -76,7 +81,7 @@ export class ScheduleListComponent implements OnInit, AfterViewInit {
 
   deleteSchedule(id: number | undefined): void {
     if (!id) return;
-    if (confirm('¿Estás seguro de que deseas eliminar este turno?')) {
+    if (confirm(this.translationService.translate('schedule.list.confirmDelete'))) {
       this.scheduleService.deleteSchedule(id).subscribe({
         next: () => this.loadSchedules(),
         error: (err) => console.error('Error deleting schedule', err)
@@ -86,7 +91,7 @@ export class ScheduleListComponent implements OnInit, AfterViewInit {
 
   restoreSchedule(id: number | undefined): void {
     if (!id) return;
-    if (confirm('¿Estás seguro de que deseas restaurar este turno?')) {
+    if (confirm(this.translationService.translate('schedule.list.confirmRestore'))) {
       this.scheduleService.restoreSchedule(id).subscribe({
         next: () => this.loadSchedules(),
         error: (err) => console.error('Error restoring schedule', err)

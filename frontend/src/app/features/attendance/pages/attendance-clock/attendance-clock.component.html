@@ -5,7 +5,7 @@
     @if (loading()) {
       <div class="loading-wrap">
         <div class="loading-spinner"></div>
-        <span class="loading-text">Cargando estado de asistencia…</span>
+        <span class="loading-text">{{ t('clock.loading') }}</span>
       </div>
     }
 
@@ -16,15 +16,15 @@
         <span>{{ loadError() }}</span>
       </div>
       <button class="retry-btn" (click)="reload()">
-        <mat-icon>refresh</mat-icon> Reintentar
+        <mat-icon>refresh</mat-icon> {{ t('clock.retry') }}
       </button>
     }
 
     <!-- ── Admin info panel (no employee record) ─────────── -->
     @if (!loading() && isAdminView()) {
       <div class="employee-info">
-        <p class="employee-greeting">Vista de administrador</p>
-        <h1 class="employee-name">Panel de Asistencia</h1>
+        <p class="employee-greeting">{{ t('clock.adminView') }}</p>
+        <h1 class="employee-name">{{ t('clock.adminPanel') }}</h1>
       </div>
       <div class="clock-section">
         <div class="clock-time">{{ liveClock() }}</div>
@@ -41,9 +41,9 @@
 
       <!-- Employee info -->
       <div class="employee-info">
-        <p class="employee-greeting">Bienvenido/a</p>
+        <p class="employee-greeting">{{ t('clock.greeting') }}</p>
         <h1 class="employee-name">{{ employee()!.name }} {{ employee()!.lastName }}</h1>
-        <span class="employee-number">Legajo #{{ employee()!.numberEmployee }}</span>
+        <span class="employee-number">{{ t('clock.employeeId') }}{{ employee()!.numberEmployee }}</span>
       </div>
 
       <!-- Live clock -->
@@ -56,7 +56,7 @@
       @if (status()) {
         <div [class]="'schedule-badge ' + (status()!.hasSchedule ? 'has-schedule' : 'no-schedule')">
           <mat-icon class="badge-icon">{{ status()!.hasSchedule ? 'event_available' : 'event_busy' }}</mat-icon>
-          <span>{{ status()!.hasSchedule ? 'Turno asignado hoy' : 'Sin turno asignado hoy' }}</span>
+          <span>{{ status()!.hasSchedule ? t('clock.hasSchedule') : t('clock.noSchedule') }}</span>
         </div>
 
         <!-- Schedule warning banner -->
@@ -75,9 +75,9 @@
             <mat-icon>{{ status()!.lastEvent!.eventType === 'CHECK_IN' ? 'login' : 'logout' }}</mat-icon>
           </div>
           <div class="last-event-text">
-            <span class="last-event-label">Último registro hoy</span>
+            <span class="last-event-label">{{ t('clock.lastEvent') }}</span>
             <span class="last-event-value">
-              {{ status()!.lastEvent!.eventType === 'CHECK_IN' ? '✔ Entrada' : '✔ Salida' }}
+              {{ status()!.lastEvent!.eventType === 'CHECK_IN' ? t('clock.eventCheckIn') : t('clock.eventCheckOut') }}
               — {{ formatTime(status()!.lastEvent!.hour) }}
             </span>
           </div>
@@ -91,10 +91,10 @@
             <mat-icon>{{ successEvent()!.eventType === 'CHECK_IN' ? 'login' : 'logout' }}</mat-icon>
           </div>
           <p class="success-title">
-            {{ successEvent()!.eventType === 'CHECK_IN' ? '✔ Entrada registrada' : '✔ Salida registrada' }}
+            {{ successEvent()!.eventType === 'CHECK_IN' ? t('clock.successCheckIn') : t('clock.successCheckOut') }}
           </p>
           <div class="success-time">{{ formatTime(successEvent()!.hour) }}</div>
-          <span class="success-device">desde {{ successEvent()!.device }}</span>
+          <span class="success-device">{{ t('clock.device') }} {{ successEvent()!.device }}</span>
         </div>
       }
 
@@ -117,13 +117,13 @@
           >
             @if (submitting()) {
               <div class="btn-spinner"></div>
-              <span>Registrando…</span>
+              <span>{{ t('clock.registering') }}</span>
             } @else {
               <mat-icon>{{ status()!.nextEvent === 'CHECK_IN' ? 'login' : 'logout' }}</mat-icon>
-              <span>{{ status()!.nextEvent === 'CHECK_IN' ? 'Marcar Entrada' : 'Marcar Salida' }}</span>
+              <span>{{ status()!.nextEvent === 'CHECK_IN' ? t('clock.btnCheckIn') : t('clock.btnCheckOut') }}</span>
             }
           </button>
-          <span class="device-chip">Dispositivo detectado: {{ detectedDevice }}</span>
+          <span class="device-chip">{{ t('clock.detectedDevice') }} {{ detectedDevice }}</span>
         </div>
       }
 

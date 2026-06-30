@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { DashboardMetrics } from './model/home.model';
-import { environment } from '../../../environment/environment';
+import { DashboardMetrics } from '../models/home.model';
+import { environment } from '../../../../environment/environment';
 
 @Injectable({
   providedIn: 'root'

@@ -13,12 +13,12 @@ table {
 .edit-input {
   width: 80px;
   padding: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--mat-sys-outline, #ccc);
   border-radius: 4px;
 }
 
 .no-data {
   text-align: center;
   padding: 20px;
-  color: #666;
+  color: var(--mat-sys-on-surface-variant);
 }

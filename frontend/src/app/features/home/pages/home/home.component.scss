@@ -1,15 +1,6 @@
-// Variables de color basadas en la imagen de referencia
-$bg-color: #f8f9fa;
-$text-main: #1e293b;
-$text-muted: #64748b;
-$primary: #0ea5e9; // Azul claro
-$success: #22c55e; // Verde
-$warning: #f59e0b; // Naranja
-$danger: #ef4444;  // Rojo
-
 .dashboard-container {
   padding: 24px;
-  background-color: $bg-color;
+  background-color: var(--mat-sys-surface-container, #f8f9fa);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -17,10 +8,10 @@ $danger: #ef4444;  // Rojo
 }
 
 /* --- UTILIDADES DE TEXTO --- */
-.text-primary { color: $primary; }
-.text-success { color: $success; }
-.text-warning { color: $warning; }
-.text-danger { color: $danger; }
+.text-primary { color: var(--mat-sys-primary); }
+.text-success { color: var(--mat-sys-tertiary); }
+.text-warning { color: var(--mat-sys-tertiary); }
+.text-danger { color: var(--mat-sys-error); }
 
 /* --- FILA 1: KPIs --- */
 .kpi-grid {
@@ -30,8 +21,8 @@ $danger: #ef4444;  // Rojo
 
   .kpi-card {
     border-radius: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    
+    box-shadow: var(--mat-sys-level1);
+
     .kpi-content {
       display: flex;
       justify-content: space-between;
@@ -41,7 +32,7 @@ $danger: #ef4444;  // Rojo
       .kpi-title {
         margin: 0;
         font-size: 0.9rem;
-        color: $text-muted;
+        color: var(--mat-sys-on-surface-variant);
         font-weight: 500;
       }
 
@@ -49,11 +40,11 @@ $danger: #ef4444;  // Rojo
         margin: 8px 0 0;
         font-size: 2rem;
         font-weight: 700;
-        color: $text-main;
+        color: var(--mat-sys-on-surface);
 
         .sub-value {
           font-size: 1.2rem;
-          color: $text-muted;
+          color: var(--mat-sys-on-surface-variant);
           font-weight: 400;
         }
       }
@@ -62,7 +53,7 @@ $danger: #ef4444;  // Rojo
         font-size: 40px;
         width: 40px;
         height: 40px;
-        background: rgba(0,0,0,0.03);
+        background: var(--mat-sys-surface-container-high, rgba(0,0,0,0.03));
         border-radius: 12px;
         padding: 8px;
       }
@@ -73,7 +64,7 @@ $danger: #ef4444;  // Rojo
 /* --- FILA 2: GRÁFICOS --- */
 .charts-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr; // El gráfico principal ocupa más espacio
+  grid-template-columns: 2fr 1fr;
   gap: 24px;
 
   @media (max-width: 900px) {
@@ -82,26 +73,25 @@ $danger: #ef4444;  // Rojo
 
   .chart-card {
     border-radius: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--mat-sys-level1);
 
     mat-card-header {
       margin-bottom: 16px;
-      mat-card-title { font-size: 1.1rem; color: $text-main; font-weight: 600; }
+      mat-card-title { font-size: 1.1rem; color: var(--mat-sys-on-surface); font-weight: 600; }
     }
   }
 
-  /* Estilos para el gráfico de barras simulado */
   .bar-chart {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    
+
     .bar-item {
       display: flex;
       align-items: center;
       gap: 16px;
 
-      .bar-label { width: 80px; font-weight: 500; color: $text-muted; }
+      .bar-label { width: 80px; font-weight: 500; color: var(--mat-sys-on-surface-variant); }
       mat-progress-bar { flex: 1; height: 12px; border-radius: 6px; }
       .bar-value { width: 40px; text-align: right; font-weight: bold; }
     }
@@ -119,15 +109,15 @@ $danger: #ef4444;  // Rojo
       gap: 16px;
       padding: 16px;
       border-radius: 12px;
-      background: #fff;
-      border: 1px solid #e2e8f0;
+      background: var(--mat-sys-surface);
+      border: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
 
       mat-icon { font-size: 32px; width: 32px; height: 32px; }
-      .label { margin: 0; font-size: 0.85rem; color: $text-muted; }
-      .name { margin: 4px 0 0; font-size: 1.1rem; font-weight: 600; color: $text-main; }
+      .label { margin: 0; font-size: 0.85rem; color: var(--mat-sys-on-surface-variant); }
+      .name { margin: 4px 0 0; font-size: 1.1rem; font-weight: 600; color: var(--mat-sys-on-surface); }
 
-      &.max { border-left: 4px solid $warning; mat-icon { color: $warning; } }
-      &.min { border-left: 4px solid $success; mat-icon { color: $success; } }
+      &.max { border-left: 4px solid var(--mat-sys-tertiary); mat-icon { color: var(--mat-sys-tertiary); } }
+      &.min { border-left: 4px solid var(--mat-sys-tertiary); mat-icon { color: var(--mat-sys-tertiary); } }
     }
   }
 }
@@ -140,10 +130,10 @@ $danger: #ef4444;  // Rojo
 
   .ranking-card {
     border-radius: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--mat-sys-level1);
 
     mat-card-header {
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
       padding-bottom: 16px;
       margin-bottom: 16px;
       mat-card-title { font-size: 1.1rem; font-weight: 600; }
@@ -158,7 +148,7 @@ $danger: #ef4444;  // Rojo
         display: flex;
         align-items: center;
         padding: 12px 0;
-        border-bottom: 1px dashed #f1f5f9;
+        border-bottom: 1px dashed var(--mat-sys-outline-variant, #f1f5f9);
 
         &:last-child { border-bottom: none; }
 
@@ -166,23 +156,23 @@ $danger: #ef4444;  // Rojo
           width: 30px;
           height: 30px;
           border-radius: 50%;
-          background: #f1f5f9;
+          background: var(--mat-sys-surface-container-high, #f1f5f9);
           display: flex;
           align-items: center;
           justify-content: center;
           font-weight: bold;
-          color: $text-muted;
+          color: var(--mat-sys-on-surface-variant);
           margin-right: 16px;
 
-          &.danger { background: rgba($danger, 0.1); color: $danger; }
+          &.danger { background: color-mix(in srgb, var(--mat-sys-error) 10%, transparent); color: var(--mat-sys-error); }
         }
 
-        .emp-name { flex: 1; font-weight: 500; color: $text-main; }
-        
+        .emp-name { flex: 1; font-weight: 500; color: var(--mat-sys-on-surface); }
+
         .emp-score {
           font-weight: bold;
-          &.success { color: $success; }
-          &.danger { color: $danger; }
+          &.success { color: var(--mat-sys-tertiary); }
+          &.danger { color: var(--mat-sys-error); }
         }
       }
     }

@@ -4,7 +4,7 @@
     <mat-card class="kpi-card">
       <div class="kpi-content">
         <div class="kpi-text">
-          <p class="kpi-title">Total Empleados Activos</p>
+          <p class="kpi-title">{{ t('home.kpi.activeEmployees') }}</p>
           <h2 class="kpi-value">{{ totalEmpleadosActivos() }}</h2>
         </div>
         <mat-icon class="kpi-icon text-primary">groups</mat-icon>
@@ -14,7 +14,7 @@
     <mat-card class="kpi-card">
       <div class="kpi-content">
         <div class="kpi-text">
-          <p class="kpi-title">Turnos Activos / Inactivos</p>
+          <p class="kpi-title">{{ t('home.kpi.activeShifts') }}</p>
           <h2 class="kpi-value">{{ turnosTrabajandoActualmente() }} <span class="sub-value">/ {{ turnosInactivos() }}</span></h2>
         </div>
         <mat-icon class="kpi-icon text-success">schedule</mat-icon>
@@ -24,7 +24,7 @@
     <mat-card class="kpi-card">
       <div class="kpi-content">
         <div class="kpi-text">
-          <p class="kpi-title">Turno con más personal</p>
+          <p class="kpi-title">{{ t('home.kpi.mostStaffed') }}</p>
           <h2 class="kpi-value">{{ turnoConMasEmpleados() }}</h2>
         </div>
         <mat-icon class="kpi-icon text-warning">star</mat-icon>
@@ -35,7 +35,7 @@
   <div class="charts-grid">
     <mat-card class="chart-card">
       <mat-card-header>
-        <mat-card-title>Empleados por Turno</mat-card-title>
+        <mat-card-title>{{ t('home.chart.employeesByShift') }}</mat-card-title>
       </mat-card-header>
       <mat-card-content class="chart-wrapper">
         <div class="placeholder-chart bar-chart">
@@ -52,14 +52,14 @@
 
     <mat-card class="chart-card">
       <mat-card-header>
-        <mat-card-title>Carga Horaria</mat-card-title>
+        <mat-card-title>{{ t('home.chart.workload') }}</mat-card-title>
       </mat-card-header>
       <mat-card-content class="extremes-content">
         @if (empleadoMasCarga()) {
           <div class="extreme-item max">
             <mat-icon>trending_up</mat-icon>
             <div>
-              <p class="label">Mayor carga horaria</p>
+              <p class="label">{{ t('home.chart.highestWorkload') }}</p>
               <p class="name">{{ empleadoMasCarga()?.nombre }} ({{ empleadoMasCarga()?.horas }}h)</p>
             </div>
           </div>
@@ -68,7 +68,7 @@
           <div class="extreme-item min">
             <mat-icon>trending_down</mat-icon>
             <div>
-              <p class="label">Menor carga horaria</p>
+              <p class="label">{{ t('home.chart.lowestWorkload') }}</p>
               <p class="name">{{ empleadoMenosCarga()?.nombre }} ({{ empleadoMenosCarga()?.horas }}h)</p>
             </div>
           </div>
@@ -80,7 +80,7 @@
   <div class="rankings-grid">
     <mat-card class="ranking-card">
       <mat-card-header>
-        <mat-card-title>Top Empleados Puntuales</mat-card-title>
+        <mat-card-title>{{ t('home.ranking.punctual') }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <ul class="ranking-list">
@@ -97,7 +97,7 @@
 
     <mat-card class="ranking-card">
       <mat-card-header>
-        <mat-card-title>Mayores Tardanzas</mat-card-title>
+        <mat-card-title>{{ t('home.ranking.latecomers') }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <ul class="ranking-list">
@@ -105,7 +105,7 @@
             <li>
               <span class="rank-number danger">{{ i + 1 }}</span>
               <span class="emp-name">{{ emp.nombre }}</span>
-              <span class="emp-score danger">{{ emp.cantidad }} faltas/tardanzas</span>
+              <span class="emp-score danger">{{ emp.cantidad }} {{ t('home.ranking.absences') }}</span>
             </li>
           }
         </ul>

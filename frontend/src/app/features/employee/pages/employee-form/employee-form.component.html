@@ -1,7 +1,7 @@
 <div class="form-container">
   <mat-card class="form-card">
     <mat-card-header>
-      <mat-card-title>{{ isEditMode ? 'Editar Empleado' : 'Crear Empleado' }}</mat-card-title>
+      <mat-card-title>{{ isEditMode ? t('employee.form.titleEdit') : t('employee.form.titleCreate') }}</mat-card-title>
     </mat-card-header>
 
     <mat-card-content>
@@ -9,34 +9,34 @@
         
         <div class="form-row">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Nombre</mat-label>
-            <input matInput formControlName="name" placeholder="Ej. John">
-            <mat-error *ngIf="employeeForm.get('name')?.hasError('required')">El nombre es requerido</mat-error>
+            <mat-label>{{ t('employee.form.name') }}</mat-label>
+            <input matInput formControlName="name" [placeholder]="t('employee.form.namePlaceholder')">
+            <mat-error *ngIf="employeeForm.get('name')?.hasError('required')">{{ t('employee.form.errorNameRequired') }}</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Apellido</mat-label>
-            <input matInput formControlName="lastName" placeholder="Ej. Spring">
-            <mat-error *ngIf="employeeForm.get('lastName')?.hasError('required')">El apellido es requerido</mat-error>
+            <mat-label>{{ t('employee.form.lastName') }}</mat-label>
+            <input matInput formControlName="lastName" [placeholder]="t('employee.form.lastNamePlaceholder')">
+            <mat-error *ngIf="employeeForm.get('lastName')?.hasError('required')">{{ t('employee.form.errorLastNameRequired') }}</mat-error>
           </mat-form-field>
         </div>
 
         <div class="form-row">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Rol</mat-label>
+            <mat-label>{{ t('employee.form.role') }}</mat-label>
             <mat-select formControlName="role">
               <mat-option *ngFor="let role of roles" [value]="role.id">
-                {{ role.name }}
+                {{ role.id === 1 ? t('employee.form.roleAdmin') : t('employee.form.roleEmployee') }}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="employeeForm.get('role')?.hasError('required')">El rol es requerido</mat-error>
+            <mat-error *ngIf="employeeForm.get('role')?.hasError('required')">{{ t('employee.form.errorRoleRequired') }}</mat-error>
           </mat-form-field>
         </div>
 
         <div class="form-row">
           <mat-form-field appearance="outline" class="full-width" *ngIf="isEditMode">
-            <mat-label>N° Empleado (Legajo)</mat-label>
-            <input matInput formControlName="numberEmployee" placeholder="Generado automáticamente">
+            <mat-label>{{ t('employee.form.empNumber') }}</mat-label>
+            <input matInput formControlName="numberEmployee" [placeholder]="t('employee.form.empNumberPlaceholder')">
           </mat-form-field>
         </div>
 
@@ -45,25 +45,25 @@
             *ngIf="
             employeeForm.hasError('dniCuilEqual') &&
             employeeForm.get('cuil')?.value
-            ">CUIL no puede ser igual al DNI
+            ">{{ t('employee.form.errorCuilDniEqual') }}
         </div>
 
         <div class="form-row">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>CUIL</mat-label>
+            <mat-label>{{ t('employee.form.cuil') }}</mat-label>
             <input matInput formControlName="cuil" (input)="employeeForm.get('cuil')?.updateValueAndValidity()"
-            placeholder="Ej. 20123456784"
+            [placeholder]="t('employee.form.cuilPlaceholder')"
             type="text" inputmode="numeric" pattern="[0-9]*">
-            <mat-error *ngIf="employeeForm.get('cuil')?.hasError('required')">CUIL es requerido</mat-error>
-            <mat-error *ngIf="employeeForm.get('cuil')?.hasError('pattern')">CUIL debe contener solo números</mat-error>
+            <mat-error *ngIf="employeeForm.get('cuil')?.hasError('required')">{{ t('employee.form.errorCuilRequired') }}</mat-error>
+            <mat-error *ngIf="employeeForm.get('cuil')?.hasError('pattern')">{{ t('employee.form.errorCuilNumeric') }}</mat-error>
             </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>DNI</mat-label>
-            <input matInput formControlName="dni" placeholder="Ej. 12345678"
+            <mat-label>{{ t('employee.form.dni') }}</mat-label>
+            <input matInput formControlName="dni" [placeholder]="t('employee.form.dniPlaceholder')"
             type="text" inputmode="numeric" pattern="[0-9]*">
-            <mat-error *ngIf="employeeForm.get('dni')?.hasError('required')">DNI es requerido</mat-error>
-            <mat-error *ngIf="employeeForm.get('dni')?.hasError('pattern')">DNI debe contener solo números</mat-error>
+            <mat-error *ngIf="employeeForm.get('dni')?.hasError('required')">{{ t('employee.form.errorDniRequired') }}</mat-error>
+            <mat-error *ngIf="employeeForm.get('dni')?.hasError('pattern')">{{ t('employee.form.errorDniNumeric') }}</mat-error>
           </mat-form-field>
         </div>
 
@@ -71,15 +71,15 @@
 
         <div class="form-row">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Notas / Estado Adicional</mat-label>
-            <textarea matInput formControlName="state" placeholder="Ej. De vacaciones..." rows="3"></textarea>
+            <mat-label>{{ t('employee.form.notes') }}</mat-label>
+            <textarea matInput formControlName="state" [placeholder]="t('employee.form.notesPlaceholder')" rows="3"></textarea>
           </mat-form-field>
         </div>
 
         <div class="form-actions">
-          <button mat-button type="button" routerLink="..">Cancelar</button>
+          <button mat-button type="button" routerLink="..">{{ t('employee.form.cancel') }}</button>
           <button mat-raised-button color="primary" type="submit" [disabled]="employeeForm.invalid">
-            Guardar
+            {{ t('employee.form.save') }}
           </button>
         </div>
       </form>

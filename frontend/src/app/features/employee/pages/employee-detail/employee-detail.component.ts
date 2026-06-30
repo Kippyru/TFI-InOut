@@ -6,6 +6,7 @@ import { EmployeeService } from '../../services/employee.service';
 import { Employee } from '../../models/employee.model';
 import { AssignScheduleDialogComponent } from '../../components/assign-schedule-dialog/assign-schedule-dialog.component';
 import { MaterialModule } from '../../../../shared/ui/materials-module';
+import { TranslationService } from '../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-employee-detail',
@@ -19,12 +20,17 @@ export class EmployeeDetailComponent implements OnInit {
   loading = true;
   error = false;
 
+  t: (key: string) => string;
+
   constructor(
     private route: ActivatedRoute,
     private employeeService: EmployeeService,
     private cdr: ChangeDetectorRef,
-    private dialog: MatDialog
-  ) { }
+    private dialog: MatDialog,
+    private translationService: TranslationService
+  ) {
+    this.t = this.translationService.translate.bind(this.translationService);
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -52,7 +58,7 @@ export class EmployeeDetailComponent implements OnInit {
   }
 
   getRoleName(roleId: string | number | undefined): string {
-    return roleId == 1 ? 'Admin' : roleId == 2 ? 'Employee' : 'Desconocido';
+    return roleId == 1 ? this.translationService.translate('employee.detail.roleAdmin') : roleId == 2 ? this.translationService.translate('employee.detail.roleEmployee') : this.translationService.translate('employee.detail.roleUnknown');
   }
 
   openAssignScheduleDialog(): void {
@@ -67,7 +73,7 @@ export class EmployeeDetailComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          alert('Turno asignado correctamente al empleado.');
+          alert(this.translationService.translate('employee.detail.scheduleAssigned'));
         }
       });
     }

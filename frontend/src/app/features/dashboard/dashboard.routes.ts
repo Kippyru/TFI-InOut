@@ -1,7 +1,7 @@
-import { Dashboard } from "./dashboard/dashboard";
+import { Dashboard } from "./pages/dashboard/dashboard.component";
 import { Routes } from "@angular/router";
-import { Home } from './home/home';
-import { adminGuard } from "../core/guards/admin-guards";
+import { Home } from '../home/pages/home/home.component';
+import { adminGuard } from "../../core/guards/admin-guards";
 
 export const dashboardRoutes: Routes = [
     {
@@ -18,16 +18,22 @@ export const dashboardRoutes: Routes = [
             {
                 path: 'employee',
                 canActivate: [adminGuard],
-                loadChildren: () => import('./employee/employee.routes').then(m => m.employeeRoutes)
+                loadChildren: () => import('../employee/employee.routes').then(m => m.employeeRoutes)
             },
             {
                 path: 'schedule',
                 canActivate: [adminGuard],
-                loadChildren: () => import('./schedule/schedule.routes').then(m => m.scheduleRoutes)
+                loadChildren: () => import('../schedule/schedule.routes').then(m => m.scheduleRoutes)
             },
             {
                 path: 'attendance',
-                loadChildren: () => import('./attendance/attendance.routes').then(m => m.attendanceRoutes)
+                loadChildren: () => import('../attendance/attendance.routes').then(m => m.attendanceRoutes)
+            },
+            {
+                path: 'settings',
+                canActivate: [adminGuard],
+                loadComponent: () => import('../../shared/components/settings-menu/settings-menu').then(m => m.SettingsMenu),
+                title: 'Configuración'
             },
             {
                 path: '**',

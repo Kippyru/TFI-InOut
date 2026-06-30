@@ -1,6 +1,6 @@
 .list-container {
   padding: 20px;
-  
+
   .header {
     display: flex;
     justify-content: space-between;
@@ -15,7 +15,7 @@
 
     h2 {
       margin: 0;
-      color: #333;
+      color: var(--mat-sys-on-surface);
     }
   }
 
@@ -25,10 +25,10 @@
     align-items: center;
     justify-content: center;
     padding: 40px;
-    
+
     p {
       margin-top: 16px;
-      color: #666;
+      color: var(--mat-sys-on-surface-variant);
     }
   }
 
@@ -39,11 +39,11 @@
   .no-data {
     padding: 40px;
     text-align: center;
-    color: #666;
+    color: var(--mat-sys-on-surface-variant);
   }
-  
+
   .inactive-row {
-    background-color: #f5f5f5;
-    color: #999;
+    background-color: var(--mat-sys-surface-container-low, #f5f5f5);
+    color: var(--mat-sys-on-surface-variant);
   }
 }

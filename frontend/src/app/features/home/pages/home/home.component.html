@@ -1,0 +1,116 @@
+<div class="dashboard-container">
+  
+  <div class="kpi-grid">
+    <mat-card class="kpi-card">
+      <div class="kpi-content">
+        <div class="kpi-text">
+          <p class="kpi-title">{{ t('home.kpi.activeEmployees') }}</p>
+          <h2 class="kpi-value">{{ totalEmpleadosActivos() }}</h2>
+        </div>
+        <mat-icon class="kpi-icon text-primary">groups</mat-icon>
+      </div>
+    </mat-card>
+
+    <mat-card class="kpi-card">
+      <div class="kpi-content">
+        <div class="kpi-text">
+          <p class="kpi-title">{{ t('home.kpi.activeShifts') }}</p>
+          <h2 class="kpi-value">{{ turnosTrabajandoActualmente() }} <span class="sub-value">/ {{ turnosInactivos() }}</span></h2>
+        </div>
+        <mat-icon class="kpi-icon text-success">schedule</mat-icon>
+      </div>
+    </mat-card>
+
+    <mat-card class="kpi-card">
+      <div class="kpi-content">
+        <div class="kpi-text">
+          <p class="kpi-title">{{ t('home.kpi.mostStaffed') }}</p>
+          <h2 class="kpi-value">{{ turnoConMasEmpleados() }}</h2>
+        </div>
+        <mat-icon class="kpi-icon text-warning">star</mat-icon>
+      </div>
+    </mat-card>
+  </div>
+
+  <div class="charts-grid">
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>{{ t('home.chart.employeesByShift') }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="chart-wrapper">
+        <div class="placeholder-chart bar-chart">
+          @for (item of empleadosPorTurno(); track item.turno) {
+            <div class="bar-item">
+              <span class="bar-label">{{ item.turno }}</span>
+              <mat-progress-bar mode="determinate" [value]="(item.cantidad / 50) * 100"></mat-progress-bar>
+              <span class="bar-value">{{ item.cantidad }}</span>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>{{ t('home.chart.workload') }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="extremes-content">
+        @if (empleadoMasCarga()) {
+          <div class="extreme-item max">
+            <mat-icon>trending_up</mat-icon>
+            <div>
+              <p class="label">{{ t('home.chart.highestWorkload') }}</p>
+              <p class="name">{{ empleadoMasCarga()?.nombre }} ({{ empleadoMasCarga()?.horas }}h)</p>
+            </div>
+          </div>
+        }
+        @if (empleadoMenosCarga()) {
+          <div class="extreme-item min">
+            <mat-icon>trending_down</mat-icon>
+            <div>
+              <p class="label">{{ t('home.chart.lowestWorkload') }}</p>
+              <p class="name">{{ empleadoMenosCarga()?.nombre }} ({{ empleadoMenosCarga()?.horas }}h)</p>
+            </div>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="rankings-grid">
+    <mat-card class="ranking-card">
+      <mat-card-header>
+        <mat-card-title>{{ t('home.ranking.punctual') }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="ranking-list">
+          @for (emp of empleadosMasPuntuales(); track emp.nombre; let i = $index) {
+            <li>
+              <span class="rank-number">{{ i + 1 }}</span>
+              <span class="emp-name">{{ emp.nombre }}</span>
+              <span class="emp-score success">{{ emp.porcentaje }}%</span>
+            </li>
+          }
+        </ul>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="ranking-card">
+      <mat-card-header>
+        <mat-card-title>{{ t('home.ranking.latecomers') }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="ranking-list">
+          @for (emp of empleadosMasTardanzas(); track emp.nombre; let i = $index) {
+            <li>
+              <span class="rank-number danger">{{ i + 1 }}</span>
+              <span class="emp-name">{{ emp.nombre }}</span>
+              <span class="emp-score danger">{{ emp.cantidad }} {{ t('home.ranking.absences') }}</span>
+            </li>
+          }
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

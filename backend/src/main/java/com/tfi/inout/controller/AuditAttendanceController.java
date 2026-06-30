@@ -1,7 +1,7 @@
 package com.tfi.inout.controller;
 
-import com.tfi.inout.dto.AuditAttendanceDto;
 import com.tfi.inout.dto.DailyAttendanceDto;
+import com.tfi.inout.dto.response.AuditAttendanceResponseDto;
 import com.tfi.inout.service.AuditAttendanceService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,7 +22,7 @@ public class AuditAttendanceController {
     private final AuditAttendanceService auditAttendanceService;
 
     @PostMapping("/audit")
-    public ResponseEntity<AuditAttendanceDto> auditAttendance(
+    public ResponseEntity<AuditAttendanceResponseDto> auditAttendance(
             @RequestParam @NotNull(message = "El adminId es obligatorio") Long adminId,
             @RequestParam @NotNull(message = "El eventAttendanceId es obligatorio") Long eventAttendanceId,
             @RequestParam @NotBlank(message = "La razon es obligatoria") String reason,

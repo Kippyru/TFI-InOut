@@ -9,7 +9,7 @@
 
     h2 {
       margin: 0;
-      color: #333;
+      color: var(--mat-sys-on-surface);
     }
 
     .actions-header {
@@ -42,7 +42,7 @@
       white-space: nowrap;
 
       &:hover {
-        color: #1976d2;
+        color: var(--mat-sys-primary);
       }
 
       .sort-icon {
@@ -51,36 +51,36 @@
         width: 16px;
         vertical-align: middle;
         margin-left: 2px;
-        color: #888;
+        color: var(--mat-sys-on-surface-variant);
       }
     }
 
     .active {
-      color: green;
+      color: var(--mat-sys-tertiary);
       font-weight: bold;
     }
 
     .inactive {
-      color: red;
+      color: var(--mat-sys-error);
       font-weight: bold;
     }
 
     .restore-btn {
-      color: #4caf50;
+      color: var(--mat-sys-tertiary);
     }
 
     .schedule-badge {
       display: inline-block;
       padding: 2px 10px;
       border-radius: 12px;
-      background-color: #e3f2fd;
-      color: #1565c0;
+      background-color: var(--mat-sys-primary-container, #e3f2fd);
+      color: var(--mat-sys-on-primary-container, #1565c0);
       font-size: 12px;
       font-weight: 500;
 
       &.no-schedule {
-        background-color: #f5f5f5;
-        color: #9e9e9e;
+        background-color: var(--mat-sys-surface-container-low, #f5f5f5);
+        color: var(--mat-sys-on-surface-variant);
       }
     }
   }
@@ -90,7 +90,7 @@
     flex-direction: column;
     align-items: center;
     padding: 40px;
-    color: #9e9e9e;
+    color: var(--mat-sys-on-surface-variant);
 
     mat-icon {
       font-size: 48px;

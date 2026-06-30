@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AttendanceService } from '../../services/attendance.service';
 import { AttendanceStatusDto, EventAttendanceDto } from '../../models/attendance.model';
 import { Employee } from '../../../employee/models/employee.model';
+import { TranslationService } from '../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-attendance-clock',
@@ -46,7 +47,14 @@ export class AttendanceClockComponent implements OnInit, OnDestroy {
   private clockInterval?: ReturnType<typeof setInterval>;
   private successTimer?: ReturnType<typeof setTimeout>;
 
-  constructor(private attendanceSvc: AttendanceService) { }
+  t!: (key: string) => string;
+
+  constructor(
+    private attendanceSvc: AttendanceService,
+    private translationService: TranslationService
+  ) {
+    this.t = this.translationService.translate.bind(this.translationService);
+  }
 
   ngOnInit(): void {
     this.detectedDevice = this.attendanceSvc.detectDevice();
@@ -101,7 +109,7 @@ export class AttendanceClockComponent implements OnInit, OnDestroy {
           this.isAdminView.set(true);
           this.loading.set(false);
         } else {
-          this.loadError.set('No se pudo obtener los datos del empleado. Verificá tu conexión.');
+          this.loadError.set(this.translationService.translate('clock.errorLoad'));
           this.loading.set(false);
         }
       }
@@ -124,7 +132,7 @@ export class AttendanceClockComponent implements OnInit, OnDestroy {
         this.loading.set(false);
       },
       error: () => {
-        this.loadError.set('No se pudo obtener el estado de asistencia. Verificá tu conexión.');
+        this.loadError.set(this.translationService.translate('clock.errorStatus'));
         this.loading.set(false);
       }
     });
@@ -228,7 +236,7 @@ export class AttendanceClockComponent implements OnInit, OnDestroy {
     if (!err.status || err.status === 0) {
       // Network / timeout
       this.registerError.set(
-        'Sin conexión. El evento NO fue registrado. Revisá tu red y reintentá.'
+        this.translationService.translate('clock.errorNoConnection')
       );
       this.registerErrorClass.set('error');
       this.registerErrorIcon.set('wifi_off');
@@ -250,7 +258,7 @@ export class AttendanceClockComponent implements OnInit, OnDestroy {
     }
 
     if (err.status === 404) {
-      this.registerError.set('Empleado no encontrado. Contactá a administración.');
+      this.registerError.set(this.translationService.translate('clock.errorEmployeeNotFound'));
       this.registerErrorClass.set('warning');
       this.registerErrorIcon.set('person_off');
       return;
@@ -258,7 +266,7 @@ export class AttendanceClockComponent implements OnInit, OnDestroy {
 
     // Generic fallback
     this.registerError.set(
-      'Ocurrió un error al registrar. Reintentá en unos segundos.'
+      this.translationService.translate('clock.errorGeneric')
     );
     this.registerErrorClass.set('error');
     this.registerErrorIcon.set('error_outline');

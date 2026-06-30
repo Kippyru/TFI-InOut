@@ -1,4 +1,5 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild, inject, signal } from '@angular/core';
+import { TranslationService } from '../../../../core/services/translation.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
@@ -6,6 +7,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AttendanceService } from '../../services/attendance.service';
@@ -26,14 +28,16 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
     MatButtonModule,
     MatIconModule,
     MatNativeDateModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTooltipModule
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-AR' }],
   templateUrl: './audit-attendance.component.html',
   styleUrls: ['./audit-attendance.component.scss']
 })
 export class AuditAttendanceComponent implements OnInit, AfterViewInit {
-  selectedDate: Date = new Date();
+  selectedDate = signal<Date>(new Date());
+  
   @ViewChild(MatSort) set matSort(sort: MatSort) {
     if (sort) {
       this.dataSource.sort = sort;
@@ -41,14 +45,14 @@ export class AuditAttendanceComponent implements OnInit, AfterViewInit {
   }
   dataSource = new MatTableDataSource<DailyAttendanceDto>();
   att: EventAttendanceDto[] = [];
-  loading = false;
+  loading = signal<boolean>(false);
   displayedColumns: string[] = ['numberEmployee', 'employee', 'schedule', 'checkIn', 'checkOut', 'reason', 'date'];
 
-  constructor(
-    private attendanceService: AttendanceService,
-    private dialog: MatDialog,
-    private cdr: ChangeDetectorRef
-  ) { }
+  private attendanceService = inject(AttendanceService);
+  private dialog = inject(MatDialog);
+  private cdr = inject(ChangeDetectorRef);
+  private translationService = inject(TranslationService);
+  t = this.translationService.translate.bind(this.translationService);
 
   ngOnInit(): void {
     this.loadAttendances();
@@ -82,18 +86,18 @@ export class AuditAttendanceComponent implements OnInit, AfterViewInit {
   }
 
   loadAttendances(): void {
-    if (!this.selectedDate) return;
-    this.loading = true;
-    const dateStr = this.formatDate(this.selectedDate);
+    if (!this.selectedDate()) return;
+    this.loading.set(true);
+    const dateStr = this.formatDate(this.selectedDate());
     this.attendanceService.getDailyAttendance(dateStr).subscribe({
       next: (data) => {
         this.dataSource.data = data;
-        this.loading = false;
+        this.loading.set(false);
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error(err);
-        this.loading = false;
+        this.loading.set(false);
       }
     });
   }

@@ -1,0 +1,180 @@
+.dashboard-container {
+  padding: 24px;
+  background-color: var(--mat-sys-surface-container, #f8f9fa);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* --- UTILIDADES DE TEXTO --- */
+.text-primary { color: var(--mat-sys-primary); }
+.text-success { color: var(--mat-sys-tertiary); }
+.text-warning { color: var(--mat-sys-tertiary); }
+.text-danger { color: var(--mat-sys-error); }
+
+/* --- FILA 1: KPIs --- */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+
+  .kpi-card {
+    border-radius: 16px;
+    box-shadow: var(--mat-sys-level1);
+
+    .kpi-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+
+      .kpi-title {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--mat-sys-on-surface-variant);
+        font-weight: 500;
+      }
+
+      .kpi-value {
+        margin: 8px 0 0;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--mat-sys-on-surface);
+
+        .sub-value {
+          font-size: 1.2rem;
+          color: var(--mat-sys-on-surface-variant);
+          font-weight: 400;
+        }
+      }
+
+      .kpi-icon {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+        background: var(--mat-sys-surface-container-high, rgba(0,0,0,0.03));
+        border-radius: 12px;
+        padding: 8px;
+      }
+    }
+  }
+}
+
+/* --- FILA 2: GRÁFICOS --- */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-card {
+    border-radius: 16px;
+    box-shadow: var(--mat-sys-level1);
+
+    mat-card-header {
+      margin-bottom: 16px;
+      mat-card-title { font-size: 1.1rem; color: var(--mat-sys-on-surface); font-weight: 600; }
+    }
+  }
+
+  .bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .bar-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .bar-label { width: 80px; font-weight: 500; color: var(--mat-sys-on-surface-variant); }
+      mat-progress-bar { flex: 1; height: 12px; border-radius: 6px; }
+      .bar-value { width: 40px; text-align: right; font-weight: bold; }
+    }
+  }
+
+  .extremes-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-top: 16px;
+
+    .extreme-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      background: var(--mat-sys-surface);
+      border: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
+
+      mat-icon { font-size: 32px; width: 32px; height: 32px; }
+      .label { margin: 0; font-size: 0.85rem; color: var(--mat-sys-on-surface-variant); }
+      .name { margin: 4px 0 0; font-size: 1.1rem; font-weight: 600; color: var(--mat-sys-on-surface); }
+
+      &.max { border-left: 4px solid var(--mat-sys-tertiary); mat-icon { color: var(--mat-sys-tertiary); } }
+      &.min { border-left: 4px solid var(--mat-sys-tertiary); mat-icon { color: var(--mat-sys-tertiary); } }
+    }
+  }
+}
+
+/* --- FILA 3: RANKINGS --- */
+.rankings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+
+  .ranking-card {
+    border-radius: 16px;
+    box-shadow: var(--mat-sys-level1);
+
+    mat-card-header {
+      border-bottom: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+      mat-card-title { font-size: 1.1rem; font-weight: 600; }
+    }
+
+    .ranking-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px dashed var(--mat-sys-outline-variant, #f1f5f9);
+
+        &:last-child { border-bottom: none; }
+
+        .rank-number {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          background: var(--mat-sys-surface-container-high, #f1f5f9);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          color: var(--mat-sys-on-surface-variant);
+          margin-right: 16px;
+
+          &.danger { background: color-mix(in srgb, var(--mat-sys-error) 10%, transparent); color: var(--mat-sys-error); }
+        }
+
+        .emp-name { flex: 1; font-weight: 500; color: var(--mat-sys-on-surface); }
+
+        .emp-score {
+          font-weight: bold;
+          &.success { color: var(--mat-sys-tertiary); }
+          &.danger { color: var(--mat-sys-error); }
+        }
+      }
+    }
+  }
+}

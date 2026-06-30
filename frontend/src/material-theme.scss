@@ -1,38 +1,193 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+@use 'sass:map';
 
+// ==============================================
+// THEME CONFIGS — for mat.theme (system tokens)
+// ==============================================
+$azure-light: (
+  color: (primary: mat.$azure-palette, theme-type: light),
+  typography: Roboto,
+  density: 0
+);
+$azure-dark: (
+  color: (primary: mat.$azure-palette, theme-type: dark),
+  typography: Roboto,
+  density: 0
+);
+
+$magenta-light: (
+  color: (primary: mat.$magenta-palette, theme-type: light),
+  typography: Roboto,
+  density: 0
+);
+$magenta-dark: (
+  color: (primary: mat.$magenta-palette, theme-type: dark),
+  typography: Roboto,
+  density: 0
+);
+
+$rose-light: (
+  color: (primary: mat.$rose-palette, theme-type: light),
+  typography: Roboto,
+  density: 0
+);
+$rose-dark: (
+  color: (primary: mat.$rose-palette, theme-type: dark),
+  typography: Roboto,
+  density: 0
+);
+
+$orange-light: (
+  color: (primary: mat.$orange-palette, theme-type: light),
+  typography: Roboto,
+  density: 0
+);
+$orange-dark: (
+  color: (primary: mat.$orange-palette, theme-type: dark),
+  typography: Roboto,
+  density: 0
+);
+
+$cyan-light: (
+  color: (primary: mat.$cyan-palette, theme-type: light),
+  typography: Roboto,
+  density: 0
+);
+$cyan-dark: (
+  color: (primary: mat.$cyan-palette, theme-type: dark),
+  typography: Roboto,
+  density: 0
+);
+
+$violet-light: (
+  color: (primary: mat.$violet-palette, theme-type: light),
+  typography: Roboto,
+  density: 0
+);
+$violet-dark: (
+  color: (primary: mat.$violet-palette, theme-type: dark),
+  typography: Roboto,
+  density: 0
+);
+
+// ==============================================
+// THEME OBJECTS — for mat.all-component-colors (component tokens)
+// ==============================================
+$azure-light-theme: mat.define-theme((color: (primary: mat.$azure-palette, theme-type: light), density: (scale: 0)));
+$azure-dark-theme: mat.define-theme((color: (primary: mat.$azure-palette, theme-type: dark), density: (scale: 0)));
+$magenta-light-theme: mat.define-theme((color: (primary: mat.$magenta-palette, theme-type: light), density: (scale: 0)));
+$magenta-dark-theme: mat.define-theme((color: (primary: mat.$magenta-palette, theme-type: dark), density: (scale: 0)));
+$rose-light-theme: mat.define-theme((color: (primary: mat.$rose-palette, theme-type: light), density: (scale: 0)));
+$rose-dark-theme: mat.define-theme((color: (primary: mat.$rose-palette, theme-type: dark), density: (scale: 0)));
+$orange-light-theme: mat.define-theme((color: (primary: mat.$orange-palette, theme-type: light), density: (scale: 0)));
+$orange-dark-theme: mat.define-theme((color: (primary: mat.$orange-palette, theme-type: dark), density: (scale: 0)));
+$cyan-light-theme: mat.define-theme((color: (primary: mat.$cyan-palette, theme-type: light), density: (scale: 0)));
+$cyan-dark-theme: mat.define-theme((color: (primary: mat.$cyan-palette, theme-type: dark), density: (scale: 0)));
+$violet-light-theme: mat.define-theme((color: (primary: mat.$violet-palette, theme-type: light), density: (scale: 0)));
+$violet-dark-theme: mat.define-theme((color: (primary: mat.$violet-palette, theme-type: dark), density: (scale: 0)));
+
+// ==============================================
+// BASE THEME — Azure Light
+// ==============================================
 html {
   height: 100%;
-  @include mat.theme(
-    (
-      color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
-      ),
-      typography: Roboto,
-      density: 0,
-    )
-  );
+  @include mat.theme($azure-light);
+  @include mat.all-component-colors($azure-light-theme);
 }
 
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
+// ==============================================
+// NO-ANIMATIONS
+// ==============================================
+html.no-animations *,
+html.no-animations *::before,
+html.no-animations *::after {
+  transition-duration: 0s !important;
+  animation-duration: 0s !important;
+  animation-iteration-count: 1 !important;
+}
 
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
+// ==============================================
+// THEME OVERRIDES — system tokens + component tokens
+// ==============================================
+
+html.dark-theme {
+  @include mat.theme($azure-dark);
+  @include mat.all-component-colors($azure-dark-theme);
+}
+
+html.theme-magenta {
+  @include mat.theme($magenta-light);
+  @include mat.all-component-colors($magenta-light-theme);
+}
+
+html.theme-magenta.dark-theme {
+  @include mat.theme($magenta-dark);
+  @include mat.all-component-colors($magenta-dark-theme);
+}
+
+html.theme-rose {
+  @include mat.theme($rose-light);
+  @include mat.all-component-colors($rose-light-theme);
+}
+
+html.theme-rose.dark-theme {
+  @include mat.theme($rose-dark);
+  @include mat.all-component-colors($rose-dark-theme);
+}
+
+html.theme-orange {
+  @include mat.theme($orange-light);
+  @include mat.all-component-colors($orange-light-theme);
+}
+
+html.theme-orange.dark-theme {
+  @include mat.theme($orange-dark);
+  @include mat.all-component-colors($orange-dark-theme);
+}
+
+html.theme-cyan {
+  @include mat.theme($cyan-light);
+  @include mat.all-component-colors($cyan-light-theme);
+}
+
+html.theme-cyan.dark-theme {
+  @include mat.theme($cyan-dark);
+  @include mat.all-component-colors($cyan-dark-theme);
+}
+
+html.theme-violet {
+  @include mat.theme($violet-light);
+  @include mat.all-component-colors($violet-light-theme);
+}
+
+html.theme-violet.dark-theme {
+  @include mat.theme($violet-dark);
+  @include mat.all-component-colors($violet-dark-theme);
+}
+
+// ==============================================
+// DENSITY OVERRIDES
+// ==============================================
+html.density-comfortable {
+  @include mat.theme((density: -1));
+}
+
+html.density-compact {
+  @include mat.theme((density: -2));
+}
+
+// ==============================================
+// BODY
+// ==============================================
+body {
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
   margin: 0;
   height: 100%;
+  color-scheme: light;
+}
+
+html.dark-theme body {
+  color-scheme: dark;
 }

@@ -1,8 +1,9 @@
 package com.tfi.inout.controller;
 
-import com.tfi.inout.dto.EmployeeDto;
+import com.tfi.inout.dto.request.EmployeeRequestDto;
 import com.tfi.inout.service.EmployeeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.tfi.inout.dto.response.EmployeeResponseDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -12,35 +13,35 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/employees")
+@RequiredArgsConstructor
 public class EmployeeController {
-    @Autowired
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
     @PostMapping
-    public ResponseEntity<String> createEmployee(@RequestBody EmployeeDto employeeDto) {
-        employeeService.createEmployee(employeeDto);
+    public ResponseEntity<String> createEmployee(@RequestBody EmployeeRequestDto employeeRequestDto) {
+        employeeService.createEmployee(employeeRequestDto);
         return ResponseEntity.ok("Employee successfully created");
     }
 
     @GetMapping("/me")
-    public ResponseEntity<EmployeeDto> getMe() {
+    public ResponseEntity<EmployeeResponseDto> getMe() {
         return ResponseEntity.ok(employeeService.getMe());
     }
 
     @GetMapping("/list")
-    public List<EmployeeDto> listEmployees() {
+    public List<EmployeeResponseDto> listEmployees() {
         return employeeService.list();
     }
 
     @GetMapping("/list/{id}")
-    public EmployeeDto getEmployee(@PathVariable Long id) {
+    public EmployeeResponseDto getEmployee(@PathVariable Long id) {
         return employeeService.listId(id);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateEmployee(@PathVariable Long id,
-                                                 @Valid @RequestBody EmployeeDto employeeDto) {
-        employeeService.edit(id, employeeDto);
+                                                  @Valid @RequestBody EmployeeRequestDto employeeRequestDto) {
+        employeeService.edit(id, employeeRequestDto);
         return ResponseEntity.ok("Employee successfully updated");
     }
 

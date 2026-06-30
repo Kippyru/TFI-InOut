@@ -1,41 +1,36 @@
 package com.tfi.inout.mapper;
 
-import com.tfi.inout.dto.EmployeeDto;
+import com.tfi.inout.dto.request.EmployeeRequestDto;
+import com.tfi.inout.dto.response.EmployeeResponseDto;
 import com.tfi.inout.model.Employee;
-import com.tfi.inout.model.User;
-import com.tfi.inout.repository.UserRepository;
 import org.mapstruct.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public abstract class EmployeeMapper {
-    @Autowired
-    protected UserRepository userRepository;
+public interface EmployeeMapper {
 
-    @Mapping(target = "user", source = "user", qualifiedByName = "mapIdToUser")
-    public abstract Employee toEntity(EmployeeDto employeeDto);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "numberEmployee", ignore = true)
+    @Mapping(target = "state", ignore = true)
+    @Mapping(target = "dateEntry", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "active", ignore = true)
+    @Mapping(target = "deletedAt", ignore = true)
+    Employee toEntity(EmployeeRequestDto employeeRequestDto);
 
     @Mapping(target = "user", source = "user.id")
-    public abstract EmployeeDto toDto(Employee employee);
+    EmployeeResponseDto toDto(Employee employee);
 
-    @Named("mapIdToUser")
-    protected User mapIdToUser(Long user) {
-        if (user == null) return null;
-        return userRepository.findById(user)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
+    List<EmployeeResponseDto> toList(List<Employee> employeeList);
 
-    public abstract List<EmployeeDto> toList(List<Employee> employeeList);
-
-    @BeanMapping(                                                   // esto es para ignorar el usuario cuando se actualiza
-            nullValuePropertyMappingStrategy =                      // el empleado, asi no quiera hacer null la fk
-                    NullValuePropertyMappingStrategy.IGNORE
-    )
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "numberEmployee", ignore = true)
+    @Mapping(target = "state", ignore = true)
+    @Mapping(target = "dateEntry", ignore = true)
     @Mapping(target = "user", ignore = true)
-    public abstract void updateEmployee(
-            EmployeeDto employeeDto,
-            @MappingTarget Employee employee);
+    @Mapping(target = "active", ignore = true)
+    @Mapping(target = "deletedAt", ignore = true)
+    void updateEmployee(EmployeeRequestDto employeeRequestDto, @MappingTarget Employee employee);
 }

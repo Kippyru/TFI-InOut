@@ -8,6 +8,7 @@ import { EmployeeService } from '../../services/employee.service';
 import { UserService } from '../../../../core/services/user.service';
 import { forkJoin } from 'rxjs';
 import { MaterialModule } from '../../../../shared/ui/materials-module';
+import { TranslationService } from '../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-employee-form',
@@ -40,14 +41,18 @@ export class EmployeeFormComponent implements OnInit {
     };
   }
 
+  t: (key: string) => string;
+
   constructor(
     private fb: FormBuilder,
     private employeeService: EmployeeService,
     private userService: UserService,
     private route: ActivatedRoute,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private translationService: TranslationService
   ) {
+    this.t = this.translationService.translate.bind(this.translationService);
     this.employeeForm = this.fb.group({
       name: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -78,7 +83,7 @@ export class EmployeeFormComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading employee', err);
-        this.snackBar.open('Error al cargar datos del empleado', 'Cerrar', { duration: 3000 });
+        this.snackBar.open(this.translationService.translate('employee.form.errorLoad'), this.translationService.translate('snackbar.close'), { duration: 3000 });
         this.router.navigate(['/dashboard/employee']); //la ruta padre es dashboard
       }
     });
@@ -117,23 +122,23 @@ export class EmployeeFormComponent implements OnInit {
 
       forkJoin(updateRequests).subscribe({
         next: () => {
-          this.snackBar.open('Empleado actualizado exitosamente', 'Cerrar', { duration: 3000 });
+          this.snackBar.open(this.translationService.translate('employee.form.updated'), this.translationService.translate('snackbar.close'), { duration: 3000 });
           this.router.navigate(['/dashboard/employee']);
         },
         error: (err) => {
           console.error('Error updating employee and user', err);
-          this.snackBar.open('Error al actualizar empleado', 'Cerrar', { duration: 3000 });
+          this.snackBar.open(this.translationService.translate('employee.form.errorUpdate'), this.translationService.translate('snackbar.close'), { duration: 3000 });
         }
       });
     } else {
       this.employeeService.createEmployee(employeeData).subscribe({
         next: () => {
-          this.snackBar.open('Empleado creado exitosamente', 'Cerrar', { duration: 3000 });
+          this.snackBar.open(this.translationService.translate('employee.form.saved'), this.translationService.translate('snackbar.close'), { duration: 3000 });
           this.router.navigate(['/dashboard/employee']);
         },
         error: (err) => {
           console.error('Error creating employee', err);
-          this.snackBar.open('Error al crear empleado', 'Cerrar', { duration: 3000 });
+          this.snackBar.open(this.translationService.translate('employee.form.errorSave'), this.translationService.translate('snackbar.close'), { duration: 3000 });
         }
       });
     }

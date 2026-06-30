@@ -1,9 +1,10 @@
 package com.tfi.inout.controller;
 
-import com.tfi.inout.dto.EmployeeDto;
-import com.tfi.inout.dto.UserDto;
+
+import com.tfi.inout.dto.request.UserRequestDto;
 import com.tfi.inout.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.tfi.inout.dto.response.UserResponseDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -13,30 +14,30 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<String> createUser(@Valid @RequestBody UserDto userDto) {
-        userService.createUser(userDto);
+    public ResponseEntity<String> createUser(@Valid @RequestBody UserRequestDto userRequestDto) {
+        userService.createUser(userRequestDto);
         return ResponseEntity.ok("User successfully created");
     }
 
     @GetMapping("/list")
-    public List<UserDto> listUsers() {
+    public List<UserResponseDto> listUsers() {
         return userService.list();
     }
 
     @GetMapping("/list/{id}")
-    public UserDto getUser(@PathVariable Long id) {
+    public UserResponseDto getUser(@PathVariable Long id) {
         return userService.listId(id);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateUser(@PathVariable Long id,
-                                             @Valid @RequestBody UserDto userDto) {
-        userService.edit(id, userDto);
+                                             @Valid @RequestBody UserRequestDto userRequestDto) {
+        userService.edit(id, userRequestDto);
         return ResponseEntity.ok("User successfully updated");
     }
 
@@ -53,7 +54,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserDto> getMe() {
+    public ResponseEntity<UserResponseDto> getMe() {
         return ResponseEntity.ok(userService.getMe());
     }
 

@@ -1,0 +1,24 @@
+package com.tfi.inout.dto.request;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ScheduleEmployeeRequestDto {
+    @NotNull(message = "El ID del empleado es obligatorio")
+    private Long employeeId;
+
+    @NotNull(message = "El ID del horario es obligatorio")
+    private Long scheduleId;
+
+    @NotNull(message = "La fecha de inicio es obligatoria")
+    private LocalDate startDate;
+
+    private LocalDate endDate;
+}

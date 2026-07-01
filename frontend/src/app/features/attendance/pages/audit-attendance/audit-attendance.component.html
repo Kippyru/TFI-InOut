@@ -14,6 +14,15 @@
     {{ t('audit.loading') }}
   </div>
 
+  <div class="page-controls">
+    <mat-form-field appearance="outline" class="page-size-field">
+      <mat-label>{{ t('pagination.pageSize') }}</mat-label>
+      <mat-select [value]="dataSource.paginator?.pageSize || 10" (selectionChange)="onPageSizeChange($event.value)">
+        <mat-option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" [class.loading]="loading()">
 
     <!-- Legajo Column -->
@@ -102,6 +111,13 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+
+  <mat-paginator [length]="dataSource.data.length"
+                 [pageSize]="dataSource.paginator?.pageSize || 10"
+                 [pageSizeOptions]="pageSizeOptions"
+                 [hidePageSize]="true"
+                 [showFirstLastButtons]="true">
+  </mat-paginator>
 
   <div *ngIf="!loading() && dataSource.data.length === 0" class="no-data">
     {{ t('audit.noData') }}

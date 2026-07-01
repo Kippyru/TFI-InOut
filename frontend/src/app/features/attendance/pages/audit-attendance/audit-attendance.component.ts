@@ -6,6 +6,7 @@ import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -14,6 +15,7 @@ import { AttendanceService } from '../../services/attendance.service';
 import { DailyAttendanceDto, EventAttendanceDto } from '../../models/attendance.model';
 import { AuditEditDialogComponent } from '../../components/audit-edit-dialog/audit-edit-dialog.component';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-audit-attendance',
@@ -23,6 +25,8 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
     FormsModule,
     MatTableModule,
     MatSortModule,
+    MatPaginatorModule,
+    MatSelectModule,
     MatDatepickerModule,
     MatInputModule,
     MatButtonModule,
@@ -43,7 +47,13 @@ export class AuditAttendanceComponent implements OnInit, AfterViewInit {
       this.dataSource.sort = sort;
     }
   }
+  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+    if (paginator) {
+      this.dataSource.paginator = paginator;
+    }
+  }
   dataSource = new MatTableDataSource<DailyAttendanceDto>();
+  pageSizeOptions = [5, 10, 20, 50];
   att: EventAttendanceDto[] = [];
   loading = signal<boolean>(false);
   displayedColumns: string[] = ['numberEmployee', 'employee', 'schedule', 'checkIn', 'checkOut', 'reason', 'date'];
@@ -110,6 +120,13 @@ export class AuditAttendanceComponent implements OnInit, AfterViewInit {
   editCheckOut(att: DailyAttendanceDto): void {
     if (!att.checkOutEventId) return;
     this.openEditDialog(att.checkOutEventId, att.checkOutTime || '00:00:00', 'Salida');
+  }
+
+  onPageSizeChange(size: number): void {
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.pageSize = size;
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   private openEditDialog(eventId: number, currentValue: string, eventType: string): void {

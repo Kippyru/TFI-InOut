@@ -32,6 +32,16 @@
     }
   }
 
+  .page-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+
+    .page-size-field {
+      width: 160px;
+    }
+  }
+
   table {
     width: 100%;
   }

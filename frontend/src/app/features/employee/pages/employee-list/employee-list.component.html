@@ -25,7 +25,16 @@
     </mat-form-field>
   </div>
 
-  <table mat-table [dataSource]="filteredEmployees()" class="mat-elevation-z8 employee-table">
+  <div class="page-controls">
+    <mat-form-field appearance="outline" class="page-size-field">
+      <mat-label>{{ t('pagination.pageSize') }}</mat-label>
+      <mat-select [value]="pageSize()" (selectionChange)="pageSize.set($event.value); pageIndex.set(0)">
+        <mat-option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <table mat-table [dataSource]="paginatedEmployees()" class="mat-elevation-z8 employee-table">
 
     <!-- ID Column -->
     <ng-container matColumnDef="id">
@@ -102,6 +111,15 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+
+  <mat-paginator [length]="filteredEmployees().length"
+                 [pageSize]="pageSize()"
+                 [pageIndex]="pageIndex()"
+                 [pageSizeOptions]="pageSizeOptions"
+                 [hidePageSize]="true"
+                 [showFirstLastButtons]="true"
+                 (page)="onPageChange($event)">
+  </mat-paginator>
 
   <div *ngIf="filteredEmployees().length === 0" class="no-results">
     <mat-icon>search_off</mat-icon>

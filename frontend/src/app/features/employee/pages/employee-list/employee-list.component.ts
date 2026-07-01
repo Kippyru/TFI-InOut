@@ -1,8 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef, inject, signal } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
+import { PageEvent } from '@angular/material/paginator';
 import { EmployeeService } from '../../services/employee.service';
 import { UserService } from '../../../../core/services/user.service';
 import { ScheduleService } from '../../../schedule/services/schedule.service';
@@ -32,6 +33,15 @@ export class EmployeeListComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'lastName', 'numberEmployee', 'scheduleName', 'active', 'actions'];
   sortField = signal<string>('');
   sortDirection = signal<'asc' | 'desc'>('asc');
+
+  pageSizeOptions = [5, 10, 20, 50];
+  pageSize = signal(10);
+  pageIndex = signal(0);
+
+  paginatedEmployees = computed(() => {
+    const start = this.pageIndex() * this.pageSize();
+    return this.filteredEmployees().slice(start, start + this.pageSize());
+  });
 
   private employeeService = inject(EmployeeService);
   private userService = inject(UserService);
@@ -111,7 +121,7 @@ export class EmployeeListComponent implements OnInit {
     }
 
     this.filteredEmployees.set(result);
-    this.cdr.detectChanges();
+    this.pageIndex.set(0);
   }
 
   onSort(field: string): void {
@@ -127,6 +137,11 @@ export class EmployeeListComponent implements OnInit {
   getSortIcon(field: string): string {
     if (this.sortField() !== field) return 'unfold_more';
     return this.sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward';
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.pageSize.set(event.pageSize);
+    this.pageIndex.set(event.pageIndex);
   }
 
   deleteEmployee(employee: Employee): void {

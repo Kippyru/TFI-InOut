@@ -34,3 +34,5 @@ Agregue pagina configuracion con modo oscuro, limpie y borre archivos que no se 
 Agregue selector de tema y ademas elimine estilos que estaban hardcodeados
 - 27062026  
 Agregue selector de idioma español/ingles en la pagina de configuracion
+- 30062026  
+Agregue paginacion y un selector de items

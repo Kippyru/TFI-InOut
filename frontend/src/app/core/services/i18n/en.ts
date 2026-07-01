@@ -208,5 +208,7 @@ export const EN: Record<string, string> = {
   'schedule.list.confirmRestore': 'Are you sure you want to restore this schedule?',
   'schedule.list.noData': 'No schedules registered.',
 
+  'pagination.pageSize': 'Items per page',
+
   'snackbar.close': 'Close',
 };

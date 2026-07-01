@@ -208,5 +208,7 @@ export const ES: Record<string, string> = {
   'schedule.list.confirmRestore': '¿Estás seguro de que deseas restaurar este turno?',
   'schedule.list.noData': 'No hay turnos registrados.',
 
+  'pagination.pageSize': 'Ítems por página',
+
   'snackbar.close': 'Cerrar',
 };

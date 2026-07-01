@@ -19,6 +19,7 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatRippleModule } from '@angular/material/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
     exports: [
@@ -42,6 +43,7 @@ import { MatRippleModule } from '@angular/material/core';
         MatSlideToggleModule,
         MatDividerModule,
         MatRippleModule,
+        MatPaginatorModule,
     ],
 })
 export class MaterialModule { }

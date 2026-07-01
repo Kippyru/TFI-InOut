@@ -9,6 +9,7 @@ import { ScheduleDetailDialogComponent } from '../../components/schedule-detail-
 import { ScheduleDetailsListDialogComponent } from '../../components/schedule-details-list-dialog/schedule-details-list-dialog.component';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { TranslationService } from '../../../../core/services/translation.service';
 
 @Component({
@@ -24,9 +25,15 @@ export class ScheduleListComponent implements OnInit, AfterViewInit {
       this.dataSource.sort = sort;
     }
   }
+  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+    if (paginator) {
+      this.dataSource.paginator = paginator;
+    }
+  }
   dataSource = new MatTableDataSource<ScheduleDto>();
   displayedColumns: string[] = ['id', 'name', 'hourWork', 'tolerances', 'active', 'actions'];
   loading = true;
+  pageSizeOptions = [5, 10, 20, 50];
   t!: (key: string) => string;
 
   constructor(
@@ -62,6 +69,13 @@ export class ScheduleListComponent implements OnInit, AfterViewInit {
 
   onDateChange(): void {
     this.loadSchedules();
+  }
+
+  onPageSizeChange(size: number): void {
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.pageSize = size;
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   loadSchedules(): void {
